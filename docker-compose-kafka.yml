@@ -13,7 +13,7 @@ services:
     environment:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "hello-world-topic:1:1"
+      KAFKA_CREATE_TOPICS: "hello-world-topic:1:1,high-priority-topic:1:1,medium-priority-topic:1:1,low-priority-topic:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
@@ -27,7 +27,7 @@ services:
       - "9000:9000"
     environment:
       ZK_HOSTS: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "hello-world-topic:1:1, hello-world-topic-2:1:1"
+      KAFKA_CREATE_TOPICS: "hello-world-topic:1:1,high-priority-topic:1:1,medium-priority-topic:1:1,low-priority-topic:1:1"
     depends_on:
       - zookeeper
     networks:
