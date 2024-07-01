@@ -7,17 +7,42 @@ services:
       - marry_me_kafka
 
   kafka:
-    image: bitnami/kafka:latest
+    image: &kafka-image bitnami/kafka:latest
     ports:
       - "9092:9092"
     environment:
+      KAFKA_BROKER_ID: 1
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "hello-world-topic:1:1,high-priority-topic:1:1,medium-priority-topic:1:1,low-priority-topic:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./create-topics.sh:/opt/bitnami/kafka/bin/create-topics.sh
     depends_on:
       - kafka-manager
+    networks:
+      - marry_me_kafka
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "kafka-topics.sh",
+          "--bootstrap-server=localhost:9092",
+          "--list",
+        ]
+      start_period: 5s
+      interval: 5s
+
+  init-kafka:
+    image: *kafka-image
+    working_dir: /opt/bitnami/kafka/bin
+    entrypoint: /bin/bash
+    depends_on:
+      kafka:
+        condition: service_healthy
+    volumes:
+      - ./create-topics.sh:/opt/bitnami/kafka/bin/create-topics.sh
+    command: -c "./create-topics.sh"
     networks:
       - marry_me_kafka
 
@@ -27,7 +52,12 @@ services:
       - "9000:9000"
     environment:
       ZK_HOSTS: zookeeper:2181
+      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "hello-world-topic:1:1,high-priority-topic:1:1,medium-priority-topic:1:1,low-priority-topic:1:1"
+    volumes:
+      - ./application.conf:/kafka-manager/conf/application.conf
     depends_on:
       - zookeeper
     networks:
@@ -35,3 +65,4 @@ services:
 
 networks:
   marry_me_kafka:
+    driver: bridge
