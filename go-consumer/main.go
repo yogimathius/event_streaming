@@ -1,78 +1,46 @@
 package main
 
 import (
-	"log"
-	"os"
-	"os/signal"
-	"github.com/IBM/sarama"
-)
+    "fmt"
+    "log"
+    "os"
+    "time"
 
-var (
-	brokers = []string{"kafka:9092"}
-	config  = sarama.NewConfig()
+    "github.com/IBM/sarama"
 )
-
-var highPriorityTopic = "high-priority-topic"
-var mediumPriorityTopic = "medium-priority-topic"
-var lowPriorityTopic = "low-priority-topic"
 
 func main() {
-	// Create consumer
-	consumer, err := sarama.NewConsumer(brokers, config)
-	if err != nil {
-		log.Fatalf("Failed to start consumer: %v", err)
-	}
-	defer func() {
-		if err := consumer.Close(); err != nil {
-			log.Fatalf("Error closing consumer: %v", err)
-		}
-	}()
+    brokers := []string{os.Getenv("KAFKA_BROKER")}
+    topics := []string{os.Getenv("KAFKA_TOPICS")}
 
-	// Create partition consumers
-	highPriorityPartitionConsumer, err := consumer.ConsumePartition(highPriorityTopic, 0, sarama.OffsetNewest)
-	if err != nil {
-		log.Fatalf("Failed to start high priority partition consumer: %v", err)
-	}
+    consumer, err := sarama.NewConsumer(brokers, nil)
+    if err != nil {
+        log.Fatalf("Failed to start consumer: %v", err)
+    }
+    defer consumer.Close()
 
-	mediumPriorityPartitionConsumer, err := consumer.ConsumePartition(mediumPriorityTopic, 0, sarama.OffsetNewest)
-	if err != nil {
-		log.Fatalf("Failed to start medium priority partition consumer: %v", err)
-	}
+    for _, topic := range topics {
+        partitionConsumer, err := consumer.ConsumePartition(topic, 0, sarama.OffsetNewest)
+        if err != nil {
+            log.Fatalf("Failed to start partition consumer: %v", err)
+        }
+        defer partitionConsumer.Close()
 
-	lowPriorityPartitionConsumer, err := consumer.ConsumePartition(lowPriorityTopic, 0, sarama.OffsetNewest)
-	if err != nil {
-		log.Fatalf("Failed to start low priority partition consumer: %v", err)
-	}
+        go func(pc sarama.PartitionConsumer) {
+            for message := range pc.Messages() {
+                log.Printf("Consumed message from topic %s: %s", topic, string(message.Value))
+                processMessage(message.Value)
+            }
+        }(partitionConsumer)
+    }
 
-	// Handle high-priority messages
-	go func() {
-		for message := range highPriorityPartitionConsumer.Messages() {
-			// Process high-priority message
-			log.Printf("High priority message: %s", message.Value)
-		}
-	}()
-
-	// Handle medium-priority messages
-	go func() {
-		for message := range mediumPriorityPartitionConsumer.Messages() {
-			// Process medium-priority message
-			log.Printf("Medium priority message: %s", message.Value)
-		}
-	}()
-
-	// Handle low-priority messages
-	go func() {
-		for message := range lowPriorityPartitionConsumer.Messages() {
-			// Process low-priority message
-			log.Printf("Low priority message: %s", message.Value)
-		}
-	}()
-
-	// Handle OS signals to gracefully shutdown
-	sigchan := make(chan os.Signal, 1)
-	signal.Notify(sigchan, os.Interrupt)
-	<-sigchan
-
-	log.Println("Interrupt signal received, shutting down...")
+    // Keep the main goroutine running
+    select {}
 }
 
+func processMessage(msg []byte) {
+    // Process the message based on its type and priority
+    fmt.Printf("Processing message: %s\n", msg)
+    // Simulate processing time based on priority logic
+    time.Sleep(2 * time.Second) // Adjust sleep time based on priority logic
+}
