@@ -21,18 +21,24 @@ func main() {
 
     for _, topic := range topics {
 				log.Printf("Consuming messages from topic: %s", topic)
-        partitionConsumer, err := consumer.ConsumePartition(topic, 0, sarama.OffsetNewest)
-        if err != nil {
-            log.Fatalf("Failed to start partition consumer: %v", err)
-        }
-        defer partitionConsumer.Close()
-
-        go func(pc sarama.PartitionConsumer) {
-            for message := range pc.Messages() {
-                log.Printf("Team %s consumed message from topic %s: %s", team, topic, string(message.Value))
-                processMessage(message.Value)
-            }
-        }(partitionConsumer)
+				partitions, err := consumer.Partitions(topic)
+				if err != nil {
+					log.Fatalf("Failed to get partitions for topic %s: %v", topic, err)
+				}
+		
+				for _, partition := range partitions {
+					go func(topic string, partition int32) {
+						partitionConsumer, err := consumer.ConsumePartition(topic, partition, sarama.OffsetNewest)
+						if err != nil {
+							log.Fatalf("Failed to start partition consumer for topic %s partition %d: %v", topic, partition, err)
+						}
+						defer partitionConsumer.Close()
+		
+						for msg := range partitionConsumer.Messages() {
+							log.Printf("Team %s consumed message from topic %s partition %d: %s", team, msg.Topic, msg.Partition, string(msg.Value))
+						}
+					}(topic, partition)
+				}
     }
 
     // Keep the main goroutine running
