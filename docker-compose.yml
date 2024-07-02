@@ -12,7 +12,7 @@ services:
       context: ./go-consumer
     environment:
       KAFKA_BROKER: "kafka:9092"
-      KAFKA_TOPICS: "brawl,not_on_list,person_fell,injured_kid"
+      KAFKA_TOPICS: "brawl,not-on-list,person-fell,injured-kid"
       TEAM: "security"
     networks:
       - marry_me_kafka
@@ -22,7 +22,7 @@ services:
       context: ./go-consumer
     environment:
       KAFKA_BROKER: "kafka:9092"
-      KAFKA_TOPICS: "dirty_table,broken_glass_clean_up"
+      KAFKA_TOPICS: "dirty-table,broken-glass-clean-up"
       TEAM: "cleanup"
     networks:
       - marry_me_kafka
@@ -32,7 +32,7 @@ services:
       context: ./go-consumer
     environment:
       KAFKA_BROKER: "kafka:9092"
-      KAFKA_TOPICS: "bad_food,music_too_loud,music_too_low,feeling_ill_catering"
+      KAFKA_TOPICS: "bad-food,music-too-loud,music-too-low,feeling-ill-catering"
       TEAM: "catering"
     networks:
       - marry_me_kafka
@@ -42,7 +42,7 @@ services:
       context: ./go-consumer
     environment:
       KAFKA_BROKER: "kafka:9092"
-      KAFKA_TOPICS: "missing_rings,missing_bride,missing_groom"
+      KAFKA_TOPICS: "missing-rings,missing-bride,missing-groom"
       TEAM: "officiant"
     networks:
       - marry_me_kafka
@@ -52,7 +52,7 @@ services:
       context: ./go-consumer
     environment:
       KAFKA_BROKER: "kafka:9092"
-      KAFKA_TOPICS: "broken_glass_waiters,person_fell_waiters,injured_kid_waiters,feeling_ill_waiters"
+      KAFKA_TOPICS: "broken-glass-waiters,person-fell-waiters,injured-kid-waiters,feeling-ill-waiters"
       TEAM: "waiters"
     networks:
       - marry_me_kafka
