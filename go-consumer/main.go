@@ -5,14 +5,14 @@ import (
     "log"
     "os"
     "time"
-
+		"strings"
     "github.com/IBM/sarama"
 )
 
 func main() {
     brokers := []string{os.Getenv("KAFKA_BROKER")}
-    topics := []string{os.Getenv("KAFKA_TOPICS")}
-
+		topics := strings.Split(os.Getenv("KAFKA_TOPICS"), ",")
+		team := os.Getenv("TEAM")
     consumer, err := sarama.NewConsumer(brokers, nil)
     if err != nil {
         log.Fatalf("Failed to start consumer: %v", err)
@@ -20,6 +20,7 @@ func main() {
     defer consumer.Close()
 
     for _, topic := range topics {
+				log.Printf("Consuming messages from topic: %s", topic)
         partitionConsumer, err := consumer.ConsumePartition(topic, 0, sarama.OffsetNewest)
         if err != nil {
             log.Fatalf("Failed to start partition consumer: %v", err)
@@ -28,7 +29,7 @@ func main() {
 
         go func(pc sarama.PartitionConsumer) {
             for message := range pc.Messages() {
-                log.Printf("Consumed message from topic %s: %s", topic, string(message.Value))
+                log.Printf("Team %s consumed message from topic %s: %s", team, topic, string(message.Value))
                 processMessage(message.Value)
             }
         }(partitionConsumer)
