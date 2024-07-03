@@ -20,24 +20,14 @@ func main() {
     defer consumer.Close()
 
     for _, topic := range topics {
-				log.Printf("Consuming messages from topic: %s", topic)
 				partitions, err := consumer.Partitions(topic)
 				if err != nil {
 					log.Fatalf("Failed to get partitions for topic %s: %v", topic, err)
 				}
 		
 				for _, partition := range partitions {
-					go func(topic string, partition int32) {
-						partitionConsumer, err := consumer.ConsumePartition(topic, partition, sarama.OffsetNewest)
-						if err != nil {
-							log.Fatalf("Failed to start partition consumer for topic %s partition %d: %v", topic, partition, err)
-						}
-						defer partitionConsumer.Close()
-		
-						for msg := range partitionConsumer.Messages() {
-							log.Printf("Team %s consumed message from topic %s partition %d: %s", team, msg.Topic, msg.Partition, string(msg.Value))
-						}
-					}(topic, partition)
+					log.Printf("Consuming messages from topic %s partition %d", topic, partition)
+					go consumePartition(consumer, topic, partition, team)
 				}
     }
 
@@ -50,4 +40,16 @@ func processMessage(msg []byte) {
     fmt.Printf("Processing message: %s\n", msg)
     // Simulate processing time based on priority logic
     time.Sleep(2 * time.Second) // Adjust sleep time based on priority logic
+}
+
+func consumePartition(consumer sarama.Consumer, topic string, partition int32, team string) {
+	partitionConsumer, err := consumer.ConsumePartition(topic, partition, sarama.OffsetNewest)
+	if err != nil {
+			log.Fatalf("Failed to start partition consumer for topic %s partition %d: %v", topic, partition, err)
+	}
+	defer partitionConsumer.Close()
+
+	for msg := range partitionConsumer.Messages() {
+			log.Printf("Team %s consumed message from topic %s partition %d: %s", team, msg.Topic, msg.Partition, string(msg.Value))
+	}
 }
