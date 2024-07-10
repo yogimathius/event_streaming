@@ -4,9 +4,15 @@ import json
 import time
 import datetime
 import pytz
+import sys
 
+print ('argument list', sys.argv)
+
+filePath = sys.argv[1]
+f = open(filePath, "r")
+ 
 # Define the possible events
-events = [
+mock_data = [
     {"event_type": "brawl", "priority": "High", "description": "Fight broke out"},
     {"event_type": "not_on_list", "priority": "Medium", "description": "Person not on list"},
     {"event_type": "accident", "priority": "Low", "description": "Person fell"},
@@ -20,6 +26,8 @@ events = [
     {"event_type": "groom", "priority": "High", "description": "Groom is missing"},
     {"event_type": "broken_items", "priority": "Medium", "description": "Glass broken"},
 ]
+
+events = json.loads(f.read()) if f else mock_data
 
 # Simulation parameters
 simulation_duration = 6 * 60  # 6 minutes in seconds
