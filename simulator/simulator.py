@@ -8,20 +8,17 @@ import pytz
 # Define the possible events
 events = [
     {"event_type": "brawl", "priority": "High", "description": "Fight broke out"},
-    {"event_type": "not-on-list", "priority": "Medium", "description": "Person not on list"},
-    {"event_type": "person-fell", "priority": "Low", "description": "Person fell"},
-    {"event_type": "injured-kid", "priority": "High", "description": "Kid got injured"},
-    {"event_type": "dirty-table", "priority": "Low", "description": "Table is dirty"},
-    {"event_type": "broken-glass-clean-up", "priority": "Medium", "description": "Glass broken"},
-    {"event_type": "bad-food", "priority": "High", "description": "Bad food served"},
-    {"event_type": "music-too-loud", "priority": "Low", "description": "Music is too loud"},
-    {"event_type": "music-too-low", "priority": "Low", "description": "Music is too low"},
-    {"event_type": "feeling-ill-catering", "priority": "Medium", "description": "Guest feeling ill"},
-    {"event_type": "missing-rings", "priority": "High", "description": "Rings are missing"},
-    {"event_type": "missing-bride", "priority": "High", "description": "Bride is missing"},
-    {"event_type": "missing-groom", "priority": "High", "description": "Groom is missing"},
-    {"event_type": "broken-glass-waiters", "priority": "Medium", "description": "Glass broken"},
-    {"event_type": "feeling-ill-waiters", "priority": "Medium", "description": "Guest feeling ill"},
+    {"event_type": "not_on_list", "priority": "Medium", "description": "Person not on list"},
+    {"event_type": "accident", "priority": "Low", "description": "Person fell"},
+    {"event_type": "dirty_table", "priority": "Low", "description": "Table is dirty"},
+    {"event_type": "broken_items", "priority": "Medium", "description": "Glass broken"},
+    {"event_type": "bad_food", "priority": "High", "description": "Bad food served"},
+    {"event_type": "music", "priority": "Low", "description": "Music is too loud"},
+    {"event_type": "music", "priority": "Low", "description": "Music is too low"},
+    {"event_type": "feeling_ill", "priority": "Medium", "description": "Guest feeling ill"},
+    {"event_type": "bride", "priority": "High", "description": "Bride is missing"},
+    {"event_type": "groom", "priority": "High", "description": "Groom is missing"},
+    {"event_type": "broken_items", "priority": "Medium", "description": "Glass broken"},
 ]
 
 # Simulation parameters
