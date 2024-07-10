@@ -1,0 +1,212 @@
+[
+  {
+    "event_type": "bride",
+    "priority": "Low",
+    "description": "Bride is missing groom's ring moments before the ceremony"
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "High",
+    "description": "Guest feeling ill due to disorganized valet parking causing delays in car retrieval"
+  },
+  {
+    "event_type": "brawl",
+    "priority": "Medium",
+    "description": "Fight broke out among guests"
+  },
+  {
+    "event_type": "groom",
+    "priority": "High",
+    "description": "Guest spilled red wine on groom's suit"
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "High",
+    "description": "Broken groom's ring found before the ceremony"
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "High",
+    "description": "Guest feeling ill due to food poisoning"
+  },
+  {
+    "event_type": "dirty_table",
+    "priority": "Low",
+    "description": "Tables left dirty with food and drinks"
+  },
+  {
+    "event_type": "music",
+    "priority": "High",
+    "description": "Band playing incorrect songs during key moments"
+  },
+  {
+    "event_type": "music",
+    "priority": "High",
+    "description": "Wrong song played during the first dance"
+  },
+  {
+    "event_type": "accident",
+    "priority": "High",
+    "description": "Guest involved in a car accident due to disorganized valet parking"
+  },
+  {
+    "event_type": "dirty_floor",
+    "priority": "Low",
+    "description": "Floor dirty and not cleaned properly"
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "High",
+    "description": "Guests complaining about undercooked meat"
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "Medium",
+    "description": "Valuable item broken during the event"
+  },
+  {
+    "event_type": "bride",
+    "priority": "High",
+    "description": "Bride feeling nauseous after eating undercooked meat"
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "High",
+    "description": "Broken groom's ring found before the ceremony"
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "High",
+    "description": "Guest feeling nauseous after eating undercooked meat"
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "Low",
+    "description": "Guest missing table settings for head table"
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "Medium",
+    "description": "Guest missing table settings for head table"
+  },
+  {
+    "event_type": "bride",
+    "priority": "High",
+    "description": "Dirty footprints noticed on the bride's dress"
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "High",
+    "description": "Broken groom's ring found before the ceremony"
+  },
+  {
+    "event_type": "accident",
+    "priority": "High",
+    "description": "Vendor involved in a car accident"
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "Low",
+    "description": "Wrong song played during the first dance"
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "High",
+    "description": "Guest feeling nauseous after eating undercooked meat"
+  },
+  {
+    "event_type": "not_on_list",
+    "priority": "High",
+    "description": "Miscommunication led to insufficient chairs for guests"
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "Low",
+    "description": "Guest having difficulty breathing due to pollen allergy"
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "Medium",
+    "description": "Guest unhappy with disorganized valet parking"
+  },
+  {
+    "event_type": "not_on_list",
+    "priority": "Low",
+    "description": "Vendor mix-up with cake flavors"
+  },
+  {
+    "event_type": "bride",
+    "priority": "Low",
+    "description": "Bride's reserved seats missing name tags"
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "High",
+    "description": "Guest upset about missing groom's ring"
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "Medium",
+    "description": "Photographer's assistant forgot to bring extra batteries"
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "Medium",
+    "description": "Dirty footprints noticed on valuable item"
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "High",
+    "description": "Wrong song played during the first dance"
+  },
+  {
+    "event_type": "dirty_floor",
+    "priority": "High",
+    "description": "Photographer's assistant forgot to bring extra batteries"
+  },
+  {
+    "event_type": "groom",
+    "priority": "Low",
+    "description": "Guest spilled red wine on their white dress"
+  },
+  {
+    "event_type": "groom",
+    "priority": "Medium",
+    "description": "Vendor mix-up with cake flavors"
+  },
+  {
+    "event_type": "dirty_table",
+    "priority": "High",
+    "description": "Guest having difficulty breathing due to pollen allergy"
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "High",
+    "description": "Dirty footprints noticed on valuable item"
+  },
+  {
+    "event_type": "accident",
+    "priority": "Medium",
+    "description": "Guest slipped due to dirty footprints on the floor"
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "High",
+    "description": "Missing name tags for reserved seats"
+  },
+  {
+    "event_type": "not_on_list",
+    "priority": "Low",
+    "description": "Guest having difficulty breathing due to pollen allergy"
+  },
+  {
+    "event_type": "groom",
+    "priority": "High",
+    "description": "Vendor mix-up with cake flavors"
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "Low",
+    "description": "Vendor mix-up with cake flavors"
+  }
+]

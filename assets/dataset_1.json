@@ -1,0 +1,172 @@
+[
+  {
+    "event_type": "dirty_table",
+    "priority": "Low",
+    "description": "Tables are dirty and need cleaning; may affect guest satisfaction."
+  },
+  {
+    "event_type": "dirty_table",
+    "priority": "Medium",
+    "description": "Tables are dirty and need cleaning urgently; impacting guest experience."
+  },
+  {
+    "event_type": "groom",
+    "priority": "Medium",
+    "description": "Issue directly affecting the groom, such as missing accessories or wardrobe malfunctions."
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "Low",
+    "description": "Guest received bad or undercooked food; minor health risk and discomfort."
+  },
+  {
+    "event_type": "not_on_list",
+    "priority": "Low",
+    "description": "Guests not on the list or insufficient seating; minor logistical issue."
+  },
+  {
+    "event_type": "brawl",
+    "priority": "Low",
+    "description": "Minor issue during the event, such as equipment malfunction or miscommunication."
+  },
+  {
+    "event_type": "dirty_floor",
+    "priority": "High",
+    "description": "Floors are dirty and need immediate cleaning to prevent slips or falls."
+  },
+  {
+    "event_type": "accident",
+    "priority": "High",
+    "description": "Critical accident or mix-up, such as a significant injury or major vendor error."
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "Low",
+    "description": "Guest received bad or undercooked food; minor health risk and discomfort."
+  },
+  {
+    "event_type": "accident",
+    "priority": "Medium",
+    "description": "Important accident or mix-up, such as a minor injury or scheduling conflict."
+  },
+  {
+    "event_type": "accident",
+    "priority": "Low",
+    "description": "Minor accident or mix-up, such as a spilled drink or misplaced item."
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "Low",
+    "description": "Broken items that need attention but do not immediately impact the event."
+  },
+  {
+    "event_type": "dirty_floor",
+    "priority": "Low",
+    "description": "Floors are dirty and need cleaning; may affect guest satisfaction."
+  },
+  {
+    "event_type": "dirty_table",
+    "priority": "Low",
+    "description": "Tables are dirty and need cleaning; may affect guest satisfaction."
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "Low",
+    "description": "Guest is feeling unwell, such as from minor allergies or mild food reactions."
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "High",
+    "description": "Critical broken items, such as essential equipment or decor affecting the event."
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "High",
+    "description": "Critical broken items, such as essential equipment or decor affecting the event."
+  },
+  {
+    "event_type": "dirty_table",
+    "priority": "High",
+    "description": "Tables are dirty and need immediate cleaning to maintain event standards."
+  },
+  {
+    "event_type": "accident",
+    "priority": "Medium",
+    "description": "Important accident or mix-up, such as a minor injury or scheduling conflict."
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "Low",
+    "description": "Broken items that need attention but do not immediately impact the event."
+  },
+  {
+    "event_type": "bride",
+    "priority": "Low",
+    "description": "Issue directly affecting the bride, such as minor dress issues or accessories."
+  },
+  {
+    "event_type": "accident",
+    "priority": "Medium",
+    "description": "Important accident or mix-up, such as missing items or minor injuries."
+  },
+  {
+    "event_type": "accident",
+    "priority": "Medium",
+    "description": "Important accident or mix-up, such as missing items or minor injuries."
+  },
+  {
+    "event_type": "groom",
+    "priority": "High",
+    "description": "Critical issue directly affecting the groom, such as severe wardrobe malfunction or health issue."
+  },
+  {
+    "event_type": "dirty_table",
+    "priority": "Medium",
+    "description": "Tables are dirty and need cleaning urgently; impacting guest experience."
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "High",
+    "description": "Guest received critically undercooked food posing a significant health risk."
+  },
+  {
+    "event_type": "brawl",
+    "priority": "High",
+    "description": "Major issue during the event, such as physical altercations or security breaches."
+  },
+  {
+    "event_type": "dirty_floor",
+    "priority": "High",
+    "description": "Floors are dirty and need immediate cleaning to prevent accidents and maintain hygiene."
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "Medium",
+    "description": "Guest is feeling significantly unwell, possibly needing medical attention."
+  },
+  {
+    "event_type": "bride",
+    "priority": "Low",
+    "description": "Issue directly affecting the bride, such as minor dress issues or accessories."
+  },
+  {
+    "event_type": "bride",
+    "priority": "Low",
+    "description": "Issue directly affecting the bride, such as minor dress issues or accessories."
+  },
+  {
+    "event_type": "not_on_list",
+    "priority": "High",
+    "description": "Guests not on the list or critical seating issue causing major disruption."
+  },
+  {
+    "event_type": "music",
+    "priority": "Low",
+    "description": "Minor issue with the music, such as wrong song selection or volume issues."
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "Low",
+    "description": "Guest is feeling unwell, such as from minor allergies or mild food reactions."
+  }
+]

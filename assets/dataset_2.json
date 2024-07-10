@@ -1,0 +1,187 @@
+[
+  {
+    "event_type": "not_on_list",
+    "priority": "High",
+    "description": "Critical seating issue due to insufficient chairs for guests caused by miscommunication."
+  },
+  {
+    "event_type": "not_on_list",
+    "priority": "Medium",
+    "description": "Medium-priority vendor mix-up with cake flavors, causing guest dissatisfaction."
+  },
+  {
+    "event_type": "bride",
+    "priority": "Medium",
+    "description": "Bride's discomfort due to guest feeling nauseous after eating undercooked meat."
+  },
+  {
+    "event_type": "accident",
+    "priority": "Low",
+    "description": "Low-priority accident involving the groom's missing ring moments before the ceremony."
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "Medium",
+    "description": "Insufficient chairs for guests due to miscommunication; medium-priority issue."
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "Medium",
+    "description": "Disorganized valet parking causing delays in car retrieval; medium-priority issue."
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "High",
+    "description": "High-priority vendor mix-up with cake flavors, requiring immediate attention."
+  },
+  {
+    "event_type": "bride",
+    "priority": "High",
+    "description": "High-priority issue with the wrong song played during the first dance, affecting the bride."
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "High",
+    "description": "Disorganized valet parking causing delays in car retrieval; high-priority issue."
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "Low",
+    "description": "Low-priority issue with the groom's missing ring moments before the ceremony."
+  },
+  {
+    "event_type": "groom",
+    "priority": "Medium",
+    "description": "Medium-priority seating issue due to insufficient chairs for guests caused by miscommunication."
+  },
+  {
+    "event_type": "groom",
+    "priority": "High",
+    "description": "High-priority seating issue due to insufficient chairs for guests caused by miscommunication."
+  },
+  {
+    "event_type": "dirty_table",
+    "priority": "Low",
+    "description": "Guest spilled red wine on their white dress; low-priority cleanup required."
+  },
+  {
+    "event_type": "accident",
+    "priority": "Low",
+    "description": "Guest having difficulty breathing due to pollen allergy; low-priority health concern."
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "Medium",
+    "description": "Disorganized valet parking causing delays in car retrieval; medium-priority issue."
+  },
+  {
+    "event_type": "groom",
+    "priority": "High",
+    "description": "Dirty footprints noticed on the dance floor; high-priority issue affecting the groom."
+  },
+  {
+    "event_type": "groom",
+    "priority": "High",
+    "description": "High-priority vendor mix-up with cake flavors; immediate attention needed for the groom."
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "High",
+    "description": "Guest spilled red wine on their white dress; high-priority cleanup required."
+  },
+  {
+    "event_type": "music",
+    "priority": "Medium",
+    "description": "Medium-priority issue with dirty footprints noticed on the dance floor."
+  },
+  {
+    "event_type": "dirty_floor",
+    "priority": "Medium",
+    "description": "Medium-priority seating issue due to insufficient chairs for guests caused by miscommunication."
+  },
+  {
+    "event_type": "dirty_floor",
+    "priority": "Low",
+    "description": "Low-priority issue with the wrong song played during the first dance."
+  },
+  {
+    "event_type": "groom",
+    "priority": "High",
+    "description": "High-priority issue with missing name tags for reserved seats, affecting the groom."
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "Medium",
+    "description": "Medium-priority issue with the wrong song played during the first dance."
+  },
+  {
+    "event_type": "groom",
+    "priority": "Medium",
+    "description": "Guest feeling nauseous after eating undercooked meat; medium-priority issue for the groom."
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "High",
+    "description": "Photographer's assistant forgot to bring extra batteries; high-priority issue."
+  },
+  {
+    "event_type": "groom",
+    "priority": "Low",
+    "description": "Low-priority vendor mix-up with cake flavors affecting the groom."
+  },
+  {
+    "event_type": "feeling_ill",
+    "priority": "Low",
+    "description": "Guest having difficulty breathing due to pollen allergy; low-priority health concern."
+  },
+  {
+    "event_type": "brawl",
+    "priority": "Medium",
+    "description": "Medium-priority seating issue due to insufficient chairs for guests caused by miscommunication."
+  },
+  {
+    "event_type": "dirty_table",
+    "priority": "Low",
+    "description": "Low-priority issue with the wrong song played during the first dance."
+  },
+  {
+    "event_type": "groom",
+    "priority": "Medium",
+    "description": "Guest feeling nauseous after eating undercooked meat; medium-priority issue for the groom."
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "Medium",
+    "description": "Disorganized valet parking causing delays in car retrieval; medium-priority issue."
+  },
+  {
+    "event_type": "bride",
+    "priority": "Low",
+    "description": "Disorganized valet parking causing delays in car retrieval; low-priority issue."
+  },
+  {
+    "event_type": "broken_items",
+    "priority": "Low",
+    "description": "Low-priority issue with the groom's missing ring moments before the ceremony."
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "Medium",
+    "description": "Disorganized valet parking causing delays in car retrieval; medium-priority issue."
+  },
+  {
+    "event_type": "bad_food",
+    "priority": "Medium",
+    "description": "Disorganized valet parking causing delays in car retrieval; medium-priority issue."
+  },
+  {
+    "event_type": "bride",
+    "priority": "High",
+    "description": "High-priority seating issue due to insufficient chairs for guests caused by miscommunication."
+  },
+  {
+    "event_type": "accident",
+    "priority": "Low",
+    "description": "Low-priority issue with missing name tags for reserved seats."
+  }
+]
