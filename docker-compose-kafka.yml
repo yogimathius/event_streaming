@@ -59,6 +59,34 @@ services:
     networks:
       - marry_me_kafka
 
+  ksqldb-server:
+    image: confluentinc/ksqldb-server:0.26.0
+    container_name: ksqldb-server
+    ports:
+      - "8088:8088"
+    environment:
+      KSQL_CONFIG_DIR: "/etc/ksqldb"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksqldb/log4j.properties"
+      KSQL_BOOTSTRAP_SERVERS: kafka-1:9092,kafka-2:9093,kafka-3:9094
+      KSQL_LISTENERS: "http://0.0.0.0:8088"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8088/info"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - marry_me_kafka
+
+  ksqldb-cli:
+    image: confluentinc/ksqldb-cli:0.26.0
+    container_name: ksqldb-cli
+    depends_on:
+      - ksqldb-server
+    entrypoint: /bin/sh
+    tty: true
+    networks:
+      - marry_me_kafka
+
 networks:
   marry_me_kafka:
     driver: bridge
