@@ -10,7 +10,7 @@ impl KafkaConsumer {
         let consumer = Consumer::from_hosts(vec!["kafka:9092".to_owned()])
             .with_group("security".to_owned())
             .with_topic("brawl".to_owned())
-            .with_topic("not-on-list".to_owned())
+            .with_topic("not_on_list".to_owned())
             .with_topic("accident".to_owned())
             .with_fallback_offset(FetchOffset::Earliest)
             .with_offset_storage(Some(GroupOffsetStorage::Kafka))
