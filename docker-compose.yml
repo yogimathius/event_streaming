@@ -9,11 +9,12 @@ services:
 
   security-consumer:
     build:
-      context: ./go-consumer
+      context: ./workers
     environment:
       KAFKA_BROKER: "kafka:9092"
       KAFKA_TOPICS: "brawl,not_on_list,accident"
       TEAM: "security"
+      TEAM_ID: "1"
     networks:
       - marry_me_kafka
 
@@ -24,6 +25,7 @@ services:
       KAFKA_BROKER: "kafka:9092"
       KAFKA_TOPICS: "dirty_table,broken_items"
       TEAM: "cleanup"
+      TEAM_ID: "2"
     networks:
       - marry_me_kafka
 
@@ -34,6 +36,7 @@ services:
       KAFKA_BROKER: "kafka:9092"
       KAFKA_TOPICS: "bad_food,music,feeling_ill"
       TEAM: "catering"
+      TEAM_ID: "3"
     networks:
       - marry_me_kafka
 
@@ -44,6 +47,7 @@ services:
       KAFKA_BROKER: "kafka:9092"
       KAFKA_TOPICS: "bride,groom"
       TEAM: "officiant"
+      TEAM_ID: "4"
     networks:
       - marry_me_kafka
 
@@ -54,6 +58,7 @@ services:
       KAFKA_BROKER: "kafka:9092"
       KAFKA_TOPICS: "broken_items,accident,feeling_ill"
       TEAM: "waiters"
+      TEAM_ID: "5"
     networks:
       - marry_me_kafka
 
