@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -20,9 +21,30 @@ type Message struct {
 }
 
 func main() {
+		// connStr := "postgres://postgres:password@localhost:5432/event_streaming"
+    // db, err := sql.Open("postgres", connStr)
+    // if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// defer db.Close()
+
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// defer db.Close()
+		// teamName := os.Getenv("TEAM")
+		// teamId := os.Getenv("TEAM_ID")
+		// teamID, err := strconv.Atoi(teamId)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// workers, err := fetchWorkerData(db, teamID)
+    // if err != nil {
+    //     log.Fatal(err)
+    // }
+		// log.Printf("Workers for team %d: %s\n", teamID, workers)
     brokers := []string{os.Getenv("KAFKA_BROKER")}
 		topics := strings.Split(os.Getenv("KAFKA_TOPICS"), ",")
-		// team := os.Getenv("TEAM")
     consumer, err := sarama.NewConsumer(brokers, nil)
     if err != nil {
         log.Fatalf("Failed to start consumer: %v", err)
@@ -103,3 +125,15 @@ func delegateToLowWorker(message Message) {
 	fmt.Printf("Delegated message %v to low-priority queue\n", message)
 }
 
+func fetchWorkerData(db *sql.DB, teamID int) (string, error) {
+	var routineType string
+	query := `SELECT workers FROM event_streaming WHERE team_id = $1`
+
+	row := db.QueryRow(query, teamID)
+	err := row.Scan(&routineType)
+	if err != nil {
+			return "", err
+	}
+
+	return routineType, nil
+}
