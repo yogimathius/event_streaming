@@ -12,15 +12,15 @@ INSERT INTO "workers" ("team_id", "current_status", "availability")
 SELECT 1, 'Idle', true
 FROM generate_series(1, 2);
 
--- Insert workers into Catering Team
-INSERT INTO "workers" ("team_id", "current_status", "availability")
-SELECT 3, 'Idle', true
-FROM generate_series(1, 10); 
-
 -- Insert workers into Clean Up Team
 INSERT INTO "workers" ("team_id", "current_status", "availability")
 SELECT 2, 'Idle', true
 FROM generate_series(1, 4);
+
+-- Insert workers into Catering Team
+INSERT INTO "workers" ("team_id", "current_status", "availability")
+SELECT 3, 'Idle', true
+FROM generate_series(1, 10); 
 
 -- Insert workers into Officiant Team
 INSERT INTO "workers" ("team_id", "current_status", "availability")
