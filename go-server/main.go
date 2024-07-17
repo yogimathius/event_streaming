@@ -6,8 +6,9 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"github.com/gin-gonic/gin"
+
 	"github.com/IBM/sarama"
+	"github.com/gin-gonic/gin"
 )
 
 type Message struct {
@@ -16,6 +17,7 @@ type Message struct {
 	Priority  string    `json:"priority"`
 	Source    string    `json:"source"`
 	Location  string    `json:"location"`
+	Description string `json:"description"`
 }
 
 var (
