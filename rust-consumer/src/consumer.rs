@@ -27,7 +27,7 @@ impl KafkaConsumer {
                     let payload = std::str::from_utf8(m.value).unwrap();
                     match serde_json::from_str::<Event>(payload) {
                         Ok(event) => {
-                            tx.send(event);
+                            self.process_event(event, tx);
                         }
                         Err(e) => {
                             println!("Failed to deserialize message: {:?}", e);
@@ -46,23 +46,26 @@ impl KafkaConsumer {
         }
     }
 
-    fn process_event(&self, event: Event) {
+    fn process_event(&self, event: Event, tx: &Transmitter) {
         match event.priority {
-            Priority::High => self.delegate_to_high_worker(event),
-            Priority::Medium => self.delegate_to_med_worker(event),
-            Priority::Low => self.delegate_to_low_worker(event),
+            Priority::High => self.delegate_to_high_worker(event, tx),
+            Priority::Medium => self.delegate_to_med_worker(event, tx),
+            Priority::Low => self.delegate_to_low_worker(event, tx),
         }
     }
 
-    fn delegate_to_high_worker(&self, event: Event) {
+    fn delegate_to_high_worker(&self, event: Event, tx: &Transmitter) {
         println!("Delegated high priority event: {:?}", event);
+        tx.send(event);
     }
 
-    fn delegate_to_med_worker(&self, event: Event) {
+    fn delegate_to_med_worker(&self, event: Event, tx: &Transmitter) {
         println!("Delegated medium priority event: {:?}", event);
+        tx.send(event);
     }
 
-    fn delegate_to_low_worker(&self, event: Event) {
+    fn delegate_to_low_worker(&self, event: Event, tx: &Transmitter) {
         println!("Delegated low priority event: {:?}", event);
+        tx.send(event);
     }
 }
