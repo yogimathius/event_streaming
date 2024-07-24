@@ -1,4 +1,4 @@
-use crate::worker::{Event, Transmitter};
+use crate::worker::{Event, Priority, Transmitter};
 use kafka::consumer::{Consumer, FetchOffset, GroupOffsetStorage};
 
 pub struct KafkaConsumer {
@@ -44,5 +44,25 @@ impl KafkaConsumer {
             }
             self.consumer.commit_consumed().unwrap();
         }
+    }
+
+    fn process_event(&self, event: Event) {
+        match event.priority {
+            Priority::High => self.delegate_to_high_worker(event),
+            Priority::Medium => self.delegate_to_med_worker(event),
+            Priority::Low => self.delegate_to_low_worker(event),
+        }
+    }
+
+    fn delegate_to_high_worker(&self, event: Event) {
+        println!("Delegated high priority event: {:?}", event);
+    }
+
+    fn delegate_to_med_worker(&self, event: Event) {
+        println!("Delegated medium priority event: {:?}", event);
+    }
+
+    fn delegate_to_low_worker(&self, event: Event) {
+        println!("Delegated low priority event: {:?}", event);
     }
 }

@@ -8,23 +8,23 @@ import sys
 
 print ('argument list', sys.argv)
 
-filePath = sys.argv[1]
-f = open(filePath, "r")
+filePath = sys.argv[1] if len(sys.argv) > 1 else ""
+f = open(filePath, "r") if filePath else None
  
 # Define the possible events
 mock_data = [
     {"event_type": "brawl", "priority": "High", "description": "Fight broke out"},
     {"event_type": "not_on_list", "priority": "Medium", "description": "Person not on list"},
     {"event_type": "accident", "priority": "Low", "description": "Person fell"},
-    {"event_type": "dirty_table", "priority": "Low", "description": "Table is dirty"},
-    {"event_type": "broken_items", "priority": "Medium", "description": "Glass broken"},
-    {"event_type": "bad_food", "priority": "High", "description": "Bad food served"},
-    {"event_type": "music", "priority": "Low", "description": "Music is too loud"},
-    {"event_type": "music", "priority": "Low", "description": "Music is too low"},
-    {"event_type": "feeling_ill", "priority": "Medium", "description": "Guest feeling ill"},
-    {"event_type": "bride", "priority": "High", "description": "Bride is missing"},
-    {"event_type": "groom", "priority": "High", "description": "Groom is missing"},
-    {"event_type": "broken_items", "priority": "Medium", "description": "Glass broken"},
+    # {"event_type": "dirty_table", "priority": "Low", "description": "Table is dirty"},
+    # {"event_type": "broken_items", "priority": "Medium", "description": "Glass broken"},
+    # {"event_type": "bad_food", "priority": "High", "description": "Bad food served"},
+    # {"event_type": "music", "priority": "Low", "description": "Music is too loud"},
+    # {"event_type": "music", "priority": "Low", "description": "Music is too low"},
+    # {"event_type": "feeling_ill", "priority": "Medium", "description": "Guest feeling ill"},
+    # {"event_type": "bride", "priority": "High", "description": "Bride is missing"},
+    # {"event_type": "groom", "priority": "High", "description": "Groom is missing"},
+    # {"event_type": "broken_items", "priority": "Medium", "description": "Glass broken"},
 ]
 
 events = json.loads(f.read()) if f else mock_data
@@ -59,6 +59,6 @@ start_time = time.time()
 while time.time() - start_time < simulation_duration:
     send_event()
     # Wait for a random duration between events (1 to 10 seconds)
-    time.sleep(random.uniform(0.001, 3.0))
+    time.sleep(random.uniform(0.001, 0.05))
 
 print("Simulation completed.")

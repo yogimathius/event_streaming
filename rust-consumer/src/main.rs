@@ -1,12 +1,15 @@
 use std::thread;
 
-use workers::{consumer::KafkaConsumer, worker::Channel};
+use workers::{
+    consumer::KafkaConsumer,
+    worker::{Channel, RoutineType},
+};
 
 fn main() {
     let channel = Channel::new();
     let tx = channel.tx.clone();
 
-    let worker = channel.start_worker();
+    let worker = channel.start_worker(RoutineType::Standard);
 
     let mut kafka_consumer = KafkaConsumer::new();
     let tx_clone = tx.clone();

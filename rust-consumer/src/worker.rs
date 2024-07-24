@@ -7,7 +7,7 @@ use std::{
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Event {
     event_type: String,
-    priority: String,
+    pub priority: Priority,
     description: String,
 }
 
@@ -26,11 +26,40 @@ pub struct Channel {
     pub rx: Receiver,
 }
 
+#[derive(Debug, Copy, Clone)]
+pub enum RoutineType {
+    Standard,
+    Intermittent,
+    Concentrated,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub enum Priority {
+    High,
+    Medium,
+    Low,
+}
+
+impl Priority {
+    pub fn as_str(&self) -> &str {
+        match self {
+            Priority::High => "High",
+            Priority::Medium => "Medium",
+            Priority::Low => "Low",
+        }
+    }
+}
+
 impl Event {
     pub fn new(event_type: &str, priority: &str, description: &str) -> Self {
         Event {
             event_type: event_type.to_string(),
-            priority: priority.to_string(),
+            priority: match priority {
+                "High" => Priority::High,
+                "Medium" => Priority::Medium,
+                "Low" => Priority::Low,
+                _ => Priority::Low,
+            },
             description: description.to_string(),
         }
     }
@@ -76,7 +105,7 @@ impl Channel {
         }
     }
 
-    pub fn start_worker(&self) -> thread::JoinHandle<()> {
+    pub fn start_worker(&self, routine_type: RoutineType) -> thread::JoinHandle<()> {
         let rx = self.rx.clone();
 
         thread::spawn(move || {

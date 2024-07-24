@@ -9,7 +9,7 @@ services:
 
   security-consumer:
     build:
-      context: ./workers
+      context: ./rust-consumer
     environment:
       KAFKA_BROKER: "kafka:9092"
       KAFKA_TOPICS: "brawl,not_on_list,accident"
