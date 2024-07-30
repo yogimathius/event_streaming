@@ -34,8 +34,7 @@ simulation_duration = 6 * 60  # 6 minutes in seconds
 api_url = "http://localhost:8080/message"  # Update with your actual API endpoint
 
 # Function to generate and send events
-def send_event():
-    event = random.choice(events)
+def send_event(event):
     current_time_utc = datetime.datetime.now(pytz.utc)
 
     # Format the time to include the timezone information with a colon
@@ -56,9 +55,15 @@ def send_event():
 # Run the simulation
 start_time = time.time()
 
-while time.time() - start_time < simulation_duration:
-    send_event()
-    # Wait for a random duration between events (1 to 10 seconds)
-    time.sleep(random.uniform(0.001, 0.05))
+if filePath:
+   for event in events:
+      print(f"Event loaded: {event}")
+      send_event(event)
+else:
+  while time.time() - start_time < simulation_duration:
+      event = random.choice(events)
+      send_event(event)
+      # Wait for a random duration between events (1 to 10 seconds)
+      time.sleep(random.uniform(0.001, 0.05))
 
 print("Simulation completed.")
