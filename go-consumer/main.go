@@ -13,11 +13,11 @@ import (
 )
 
 type Message struct {
+	Id string `json:"id"`
 	EventType string    `json:"event_type"`
-	Timestamp time.Time `json:"timestamp"`
+	EventTime time.Time `json:"event_time"`
 	Priority  string    `json:"priority"`
-	Source    string    `json:"source"`
-	Location  string    `json:"location"`
+	Description string `json:"description"`
 }
 
 func main() {

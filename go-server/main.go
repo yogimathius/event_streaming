@@ -12,11 +12,10 @@ import (
 )
 
 type Message struct {
+	Id string `json:"id"`
 	EventType string    `json:"event_type"`
-	Timestamp time.Time `json:"timestamp"`
+	EventTime time.Time `json:"event_time"`
 	Priority  string    `json:"priority"`
-	Source    string    `json:"source"`
-	Location  string    `json:"location"`
 	Description string `json:"description"`
 }
 
@@ -62,7 +61,6 @@ func handleMessage(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	sendMessageToKafka(msg)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Message sent to Kafka successfully"})
