@@ -5,6 +5,7 @@ import time
 import datetime
 import pytz
 import sys
+import uuid
 
 print ('argument list', sys.argv)
 
@@ -38,10 +39,11 @@ def send_event(event):
     current_time_utc = datetime.datetime.now(pytz.utc)
 
     # Format the time to include the timezone information with a colon
-    event["timestamp"] = current_time_utc.strftime("%Y-%m-%dT%H:%M:%S%z")
-
-    # Insert a colon into the timezone part of the timestamp to match the expected format
-    event["timestamp"] = event["timestamp"][:-2] + ":" + event["timestamp"][-2:]
+    event["event_time"] = current_time_utc.strftime("%Y-%m-%dT%H:%M:%S%z")
+    id = uuid.uuid1()
+    event["id"] = str(id)
+    # Insert a colon into the timezone part of the event_time to match the expected format
+    event["event_time"] = event["event_time"][:-2] + ":" + event["event_time"][-2:]
     headers = {'Content-Type': 'application/json'}
     
     response = requests.post(api_url, headers=headers, data=json.dumps(event))
