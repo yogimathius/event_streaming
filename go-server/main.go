@@ -17,6 +17,7 @@ type Message struct {
 	EventTime time.Time `json:"event_time"`
 	Priority  string    `json:"priority"`
 	Description string `json:"description"`
+	Status string `json:"status"`
 }
 
 var (
@@ -57,6 +58,7 @@ func initKafkaProducer() {
 
 func handleMessage(c *gin.Context) {
 	var msg Message
+	msg.Status = "received"
 	if err := c.ShouldBindJSON(&msg); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -68,7 +70,7 @@ func handleMessage(c *gin.Context) {
 
 func sendMessageToKafka(message Message) {
 	jsonMessage, err := json.Marshal(message)
-	log.Printf("Sending message to Kafka: %s\n", jsonMessage)
+	
 	if err != nil {
 		log.Printf("Failed to marshal message to JSON: %v\n", err)
 		return
@@ -77,7 +79,7 @@ func sendMessageToKafka(message Message) {
 		Topic: message.EventType,
 		Value: sarama.StringEncoder(jsonMessage),
 	})
-	fmt.Printf("Message sent to partition %d at offset %d\n", partition, offset)
+	fmt.Printf("Message sent to partition %d at offset %d: %s\n", partition, offset, jsonMessage)
 	if err != nil {
 		log.Printf("Failed to send message to Kafka: %v\n", err)
 		return

@@ -18,6 +18,7 @@ type Message struct {
 	EventTime time.Time `json:"event_time"`
 	Priority  string    `json:"priority"`
 	Description string `json:"description"`
+	Status string `json:"status"`
 }
 
 func main() {
@@ -63,7 +64,6 @@ func main() {
 				}
     }
 
-    // Keep the main goroutine running
     select {}
 }
 
@@ -76,22 +76,17 @@ func consumePartition(consumer sarama.Consumer, topic string, partition int32) {
 	defer partitionConsumer.Close()
 
 	for msg := range partitionConsumer.Messages() {
-			log.Printf("Received message from topic %s partition %d: %s", topic, partition, string(msg.Value))
 			processMessage(msg)
 	}
 }
 
 func processMessage(msg *sarama.ConsumerMessage) {
-	fmt.Printf("Message received: key=%s value=%s\n", string(msg.Key), string(msg.Value))
-
-	// Unmarshal the JSON message
 	var message Message
 	if err := json.Unmarshal(msg.Value, &message); err != nil {
 			log.Printf("Error unmarshalling message: %v\n", err)
 			return
 	}
 
-	// Process the message based on priority
 	switch message.Priority {
 	case "High":
 			delegateToHighWorker(message)
@@ -105,22 +100,16 @@ func processMessage(msg *sarama.ConsumerMessage) {
 }
 
 func delegateToHighWorker(message Message) {
-	// Code to enqueue the message to the appropriate worker queue
-	// For example, using Redis Queue (RQ):
 	// job := rqueue.Enqueue(queueName, message)
 	fmt.Printf("Delegated message %v to high-priority queue\n", message)
 }
 
 func delegateToMedWorker(message Message) {
-	// Code to enqueue the message to the appropriate worker queue
-	// For example, using Redis Queue (RQ):
 	// job := rqueue.Enqueue(queueName, message)
 	fmt.Printf("Delegated message %v to medium-priority queue\n", message)
 }
 
 func delegateToLowWorker(message Message) {
-	// Code to enqueue the message to the appropriate worker queue
-	// For example, using Redis Queue (RQ):
 	// job := rqueue.Enqueue(queueName, message)
 	fmt.Printf("Delegated message %v to low-priority queue\n", message)
 }
