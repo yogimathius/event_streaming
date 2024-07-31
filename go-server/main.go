@@ -21,7 +21,7 @@ type Message struct {
 }
 
 var (
-	brokers  = []string{"kafka:9092"} 
+	brokers  = []string{"kafka:29092"} 
 	producer sarama.SyncProducer
 )
 

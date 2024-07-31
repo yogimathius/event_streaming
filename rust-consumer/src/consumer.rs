@@ -7,7 +7,7 @@ pub struct KafkaConsumer {
 
 impl KafkaConsumer {
     pub fn new() -> Self {
-        let consumer = Consumer::from_hosts(vec!["kafka:9092".to_owned()])
+        let consumer = Consumer::from_hosts(vec!["kafka:29092".to_owned()])
             .with_group("security".to_owned())
             .with_topic("brawl".to_owned())
             .with_topic("not_on_list".to_owned())

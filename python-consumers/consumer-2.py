@@ -1,7 +1,7 @@
 from confluent_kafka import Consumer, KafkaError
 
 conf = {
-    'bootstrap.servers': 'localhost:9092',
+    'bootstrap.servers': 'localhost:29092',
     'group.id': 'my_consumer_group',
     'auto.offset.reset': 'earliest'
 }

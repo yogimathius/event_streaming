@@ -30,14 +30,18 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./create-topics.sh:/scripts/create-topics.sh
-    command: >
-      /bin/bash -c "
-        /etc/confluent/docker/run &
-        echo 'Waiting for Kafka to be ready...' &&
-        until /usr/bin/kafka-topics --bootstrap-server kafka:29092 --list &>/dev/null; do
-          sleep 5
-        done &&
-        /scripts/create-topics.sh"
+    networks:
+      - marry_me_kafka
+
+  kafka-create-topics:
+    image: confluentinc/cp-kafka:7.1.0
+    depends_on:
+      - kafka
+    hostname: kafka-create-topics
+    command: ["bash", "./create-topics.sh"]
+    working_dir: /scripts
+    volumes:
+      - ./scripts:/scripts
     networks:
       - marry_me_kafka
 
