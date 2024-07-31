@@ -3,7 +3,7 @@ CREATE STREAM brawl_stream (
   event_time TIMESTAMP
 ) WITH (
   KAFKA_TOPIC='brawl',
-  VALUE_FORMAT='AVRO'
+  VALUE_FORMAT='json'
 );
 
 CREATE STREAM not_on_list_stream (
@@ -11,7 +11,7 @@ CREATE STREAM not_on_list_stream (
   event_time TIMESTAMP
 ) WITH (
   KAFKA_TOPIC='not_on_list',
-  VALUE_FORMAT='AVRO'
+  VALUE_FORMAT='json'
 );
 
 CREATE STREAM accident_stream (
@@ -19,7 +19,7 @@ CREATE STREAM accident_stream (
   event_time TIMESTAMP
 ) WITH (
   KAFKA_TOPIC='accident',
-  VALUE_FORMAT='AVRO'
+  VALUE_FORMAT='json'
 );
 
 CREATE STREAM dirty_table_stream (
@@ -27,7 +27,7 @@ CREATE STREAM dirty_table_stream (
   event_time TIMESTAMP
 ) WITH (
   KAFKA_TOPIC='dirty_table',
-  VALUE_FORMAT='AVRO'
+  VALUE_FORMAT='json'
 );
 
 CREATE STREAM broken_items_stream (
@@ -35,7 +35,7 @@ CREATE STREAM broken_items_stream (
   event_time TIMESTAMP
 ) WITH (
   KAFKA_TOPIC='broken_items',
-  VALUE_FORMAT='AVRO'
+  VALUE_FORMAT='json'
 );
 
 CREATE STREAM bad_food_stream (
@@ -43,7 +43,7 @@ CREATE STREAM bad_food_stream (
   event_time TIMESTAMP
 ) WITH (
   KAFKA_TOPIC='bad_food',
-  VALUE_FORMAT='AVRO'
+  VALUE_FORMAT='json'
 );
 
 CREATE STREAM music_stream (
@@ -51,7 +51,7 @@ CREATE STREAM music_stream (
   event_time TIMESTAMP
 ) WITH (
   KAFKA_TOPIC='music',
-  VALUE_FORMAT='AVRO'
+  VALUE_FORMAT='json'
 );
 
 CREATE STREAM feeling_ill_stream (
@@ -59,7 +59,7 @@ CREATE STREAM feeling_ill_stream (
   event_time TIMESTAMP
 ) WITH (
   KAFKA_TOPIC='feeling_ill',
-  VALUE_FORMAT='AVRO'
+  VALUE_FORMAT='json'
 );
 
 CREATE STREAM bride_stream (
@@ -67,7 +67,7 @@ CREATE STREAM bride_stream (
   event_time TIMESTAMP
 ) WITH (
   KAFKA_TOPIC='bride',
-  VALUE_FORMAT='AVRO'
+  VALUE_FORMAT='json'
 );
 
 CREATE STREAM groom_stream (
@@ -75,5 +75,5 @@ CREATE STREAM groom_stream (
   event_time TIMESTAMP
 ) WITH (
   KAFKA_TOPIC='groom',
-  VALUE_FORMAT='AVRO'
+  VALUE_FORMAT='json'
 );
