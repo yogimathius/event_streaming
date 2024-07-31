@@ -40,19 +40,9 @@ services:
     networks:
       - marry_me_kafka
 
-  # officiant-consumer:
-  #   build:
-  #     context: ./go-consumer
-  #   environment:
-  #     KAFKA_BROKER: "kafka:29092"
-  #     KAFKA_TOPICS: "bride,groom"
-  #     TEAM: "officiant"
-  #     TEAM_ID: "4"
-  #   networks:
-  #     - marry_me_kafka
   officiant-consumer:
     build:
-      context: ./python-consumer
+      context: ./go-consumer
     environment:
       KAFKA_BROKER: "kafka:29092"
       KAFKA_TOPICS: "bride,groom"
