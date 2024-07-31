@@ -12,7 +12,7 @@ DROP STREAM IF EXISTS groom_stream;
 CREATE STREAM brawl_stream (
   id STRING,
   event_type STRING,
-  time_stamp TIMESTAMP,
+  event_time STRING,
   priority STRING,
   description STRING
 ) WITH (
@@ -23,7 +23,7 @@ CREATE STREAM brawl_stream (
 CREATE STREAM not_on_list_stream (
   id STRING,
   event_type STRING,
-  time_stamp TIMESTAMP,
+  event_time STRING,
   priority STRING,
   description STRING
 ) WITH (
@@ -34,7 +34,7 @@ CREATE STREAM not_on_list_stream (
 CREATE STREAM accident_stream (
   id STRING,
   event_type STRING,
-  time_stamp TIMESTAMP,
+  event_time STRING,
   priority STRING,
   description STRING
 ) WITH (
@@ -45,7 +45,7 @@ CREATE STREAM accident_stream (
 CREATE STREAM dirty_table_stream (
   id STRING,
   event_type STRING,
-  time_stamp TIMESTAMP,
+  event_time STRING,
   priority STRING,
   description STRING
 ) WITH (
@@ -56,7 +56,7 @@ CREATE STREAM dirty_table_stream (
 CREATE STREAM broken_items_stream (
   id STRING,
   event_type STRING,
-  time_stamp TIMESTAMP,
+  event_time STRING,
   priority STRING,
   description STRING
 ) WITH (
@@ -67,7 +67,7 @@ CREATE STREAM broken_items_stream (
 CREATE STREAM bad_food_stream (
   id STRING,
   event_type STRING,
-  time_stamp TIMESTAMP,
+  event_time STRING,
   priority STRING,
   description STRING
 ) WITH (
@@ -78,7 +78,7 @@ CREATE STREAM bad_food_stream (
 CREATE STREAM music_stream (
   id STRING,
   event_type STRING,
-  time_stamp TIMESTAMP,
+  event_time STRING,
   priority STRING,
   description STRING
 ) WITH (
@@ -89,7 +89,7 @@ CREATE STREAM music_stream (
 CREATE STREAM feeling_ill_stream (
   id STRING,
   event_type STRING,
-  time_stamp TIMESTAMP,
+  event_time STRING,
   priority STRING,
   description STRING
 ) WITH (
@@ -100,7 +100,7 @@ CREATE STREAM feeling_ill_stream (
 CREATE STREAM bride_stream (
   id STRING,
   event_type STRING,
-  time_stamp TIMESTAMP,
+  event_time STRING,
   priority STRING,
   description STRING
 ) WITH (
@@ -111,7 +111,7 @@ CREATE STREAM bride_stream (
 CREATE STREAM groom_stream (
   id STRING,
   event_type STRING,
-  time_stamp TIMESTAMP,
+  event_time STRING,
   priority STRING,
   description STRING
 ) WITH (
