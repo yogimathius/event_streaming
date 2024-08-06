@@ -4,6 +4,7 @@ use std::{
     sync::{Arc, Condvar, Mutex},
     thread,
 };
+use uuid::Uuid;
 
 use crate::producer::KafkaProducer;
 #[derive(Debug, Deserialize, Serialize, Clone)]
@@ -13,6 +14,7 @@ pub struct Event {
     description: String,
     pub status: String,
     pub event_time: String,
+    pub id: Uuid,
 }
 
 pub struct Transmitter {
@@ -68,6 +70,7 @@ impl Event {
             description: description.to_string(),
             status: status.to_string(),
             event_time: chrono::Utc::now().to_rfc3339(),
+            id: Uuid::new_v4(),
         }
     }
 }
