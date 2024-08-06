@@ -31,7 +31,10 @@ impl KafkaConsumer {
                     let payload = std::str::from_utf8(m.value).unwrap();
                     match serde_json::from_str::<Event>(payload) {
                         Ok(mut event) => {
-                            event.status = "consumed".to_owned();
+                            if event.status == "message produced" {
+                                continue;
+                            }
+                            event.status = "message consumed".to_owned();
                             event.event_time = chrono::Utc::now().to_rfc3339();
                             self.producer.send(event.clone());
                             self.process_event(event, tx);
