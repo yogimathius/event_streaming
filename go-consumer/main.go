@@ -21,6 +21,11 @@ type Message struct {
 	Status string `json:"status"`
 }
 
+var (
+	brokers  = []string{"kafka:29092"} 
+	producer sarama.SyncProducer
+)
+
 func main() {
 		// connStr := "postgres://postgres:password@localhost:5432/event_streaming"
     // db, err := sql.Open("postgres", connStr)
@@ -44,6 +49,8 @@ func main() {
     //     log.Fatal(err)
     // }
 		// log.Printf("Workers for team %d: %s\n", teamID, workers)
+		initKafkaProducer()
+
     brokers := []string{os.Getenv("KAFKA_BROKER")}
 		topics := strings.Split(os.Getenv("KAFKA_TOPICS"), ",")
     consumer, err := sarama.NewConsumer(brokers, nil)
@@ -51,7 +58,12 @@ func main() {
         log.Fatalf("Failed to start consumer: %v", err)
     }
     defer consumer.Close()
-
+		defer func() {
+			if err := producer.Close(); err != nil {
+				log.Printf("Error closing Kafka producer: %v\n", err)
+			}
+		}()
+		
     for _, topic := range topics {
 				partitions, err := consumer.Partitions(topic)
 				if err != nil {
@@ -86,6 +98,8 @@ func processMessage(msg *sarama.ConsumerMessage) {
 			log.Printf("Error unmarshalling message: %v\n", err)
 			return
 	}
+	message.Status = "message consumed"
+	sendMessageToKafka(message)
 
 	switch message.Priority {
 	case "High":
@@ -102,16 +116,22 @@ func processMessage(msg *sarama.ConsumerMessage) {
 func delegateToHighWorker(message Message) {
 	// job := rqueue.Enqueue(queueName, message)
 	fmt.Printf("Delegated message %v to high-priority queue\n", message)
+	message.Status = "message delegated high priority"
+	sendMessageToKafka(message)
 }
 
 func delegateToMedWorker(message Message) {
 	// job := rqueue.Enqueue(queueName, message)
 	fmt.Printf("Delegated message %v to medium-priority queue\n", message)
+	message.Status = "message delegated medium priority"
+	sendMessageToKafka(message)
 }
 
 func delegateToLowWorker(message Message) {
 	// job := rqueue.Enqueue(queueName, message)
 	fmt.Printf("Delegated message %v to low-priority queue\n", message)
+	message.Status = "message delegated low priority"
+	sendMessageToKafka(message)
 }
 
 func fetchWorkerData(db *sql.DB, teamID int) (string, error) {
@@ -125,4 +145,36 @@ func fetchWorkerData(db *sql.DB, teamID int) (string, error) {
 	}
 
 	return routineType, nil
+}
+
+func initKafkaProducer() {
+	config := sarama.NewConfig()
+	config.Producer.RequiredAcks = sarama.WaitForLocal
+	config.Producer.Return.Successes = true
+
+	var err error
+	producer, err = sarama.NewSyncProducer(brokers, config)
+	if err != nil {
+		log.Fatalf("Error creating Kafka producer: %v", err)
+	}
+
+	fmt.Println("Kafka producer initialized")
+}
+
+func sendMessageToKafka(message Message) {
+	jsonMessage, err := json.Marshal(message)
+	
+	if err != nil {
+		log.Printf("Failed to marshal message to JSON: %v\n", err)
+		return
+	}
+	partition, offset, err := producer.SendMessage(&sarama.ProducerMessage{
+		Topic: message.EventType,
+		Value: sarama.StringEncoder(jsonMessage),
+	})
+	fmt.Printf("Message sent to partition %d at offset %d: %s\n", partition, offset, jsonMessage)
+	if err != nil {
+		log.Printf("Failed to send message to Kafka: %v\n", err)
+		return
+	}
 }
