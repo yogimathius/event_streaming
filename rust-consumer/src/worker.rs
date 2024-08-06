@@ -4,6 +4,8 @@ use std::{
     sync::{Arc, Condvar, Mutex},
     thread,
 };
+
+use crate::producer::KafkaProducer;
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Event {
     pub event_type: String,
@@ -26,6 +28,7 @@ pub struct Receiver {
 pub struct Channel {
     pub tx: Transmitter,
     pub rx: Receiver,
+    producer: KafkaProducer,
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -96,6 +99,7 @@ impl Channel {
     pub fn new() -> Self {
         let store = Arc::new(Mutex::new(VecDeque::new()));
         let emitter = Arc::new(Condvar::new());
+        let producer = KafkaProducer::new();
 
         Channel {
             tx: Transmitter {
@@ -106,10 +110,11 @@ impl Channel {
                 store: Arc::clone(&store),
                 emitter: Arc::clone(&emitter),
             },
+            producer,
         }
     }
 
-    pub fn start_worker(&self, routine_type: RoutineType) -> thread::JoinHandle<()> {
+    pub fn start_worker(mut self, routine_type: RoutineType) -> thread::JoinHandle<()> {
         let rx = self.rx.clone();
 
         thread::spawn(move || {
@@ -117,7 +122,12 @@ impl Channel {
                 let job = rx.recv(); // we could use try_recv too
 
                 match job {
-                    Some(job) => println!("Job: {:?}", job),
+                    Some(mut job) => {
+                        println!("Job: {:?}", job);
+                        job.status = "picked up by worker".to_owned();
+                        job.event_time = chrono::Utc::now().to_rfc3339();
+                        self.producer.send(job.clone());
+                    }
                     None => break,
                 }
             }
