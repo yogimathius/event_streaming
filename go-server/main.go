@@ -42,6 +42,18 @@ func main() {
 	}()
 }
 
+func handleMessage(c *gin.Context) {
+	var msg Message
+	msg.Status = "message produced"
+	if err := c.ShouldBindJSON(&msg); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	sendMessageToKafka(msg)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Message sent to Kafka successfully"})
+}
+
 func initKafkaProducer() {
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForLocal
@@ -56,17 +68,6 @@ func initKafkaProducer() {
 	fmt.Println("Kafka producer initialized")
 }
 
-func handleMessage(c *gin.Context) {
-	var msg Message
-	msg.Status = "received"
-	if err := c.ShouldBindJSON(&msg); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	sendMessageToKafka(msg)
-
-	c.JSON(http.StatusOK, gin.H{"message": "Message sent to Kafka successfully"})
-}
 
 func sendMessageToKafka(message Message) {
 	jsonMessage, err := json.Marshal(message)
