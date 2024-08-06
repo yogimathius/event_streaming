@@ -98,18 +98,20 @@ func processMessage(msg *sarama.ConsumerMessage) {
 			log.Printf("Error unmarshalling message: %v\n", err)
 			return
 	}
-	message.Status = "message consumed"
-	sendMessageToKafka(message)
+	if message.Status == "message produced" {
+		message.Status = "message consumed"
+		sendMessageToKafka(message)
 
-	switch message.Priority {
-	case "High":
-			delegateToHighWorker(message)
-	case "Medium":
-			delegateToMedWorker(message)
-	case "Low":
-			delegateToLowWorker(message)
-	default:
-			log.Printf("Unknown priority: %s\n", message.Priority)
+		switch message.Priority {
+		case "High":
+				delegateToHighWorker(message)
+		case "Medium":
+				delegateToMedWorker(message)
+		case "Low":
+				delegateToLowWorker(message)
+		default:
+				log.Printf("Unknown priority: %s\n", message.Priority)
+		}
 	}
 }
 
@@ -163,6 +165,7 @@ func initKafkaProducer() {
 
 func sendMessageToKafka(message Message) {
 	jsonMessage, err := json.Marshal(message)
+	message.EventTime = time.Now()
 	
 	if err != nil {
 		log.Printf("Failed to marshal message to JSON: %v\n", err)
