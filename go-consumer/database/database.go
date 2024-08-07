@@ -7,7 +7,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var connStr = "postgres://postgres:password@localhost:5432/event_streaming"
+var connStr = "postgres://postgres:pass123@postgres:5432/event_streaming?sslmode=disable"
 
 func InitDb() (*sql.DB, error) {
 	db, err := sql.Open("postgres", connStr)
