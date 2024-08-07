@@ -23,6 +23,7 @@ type Message struct {
 var (
 	brokers  = []string{"kafka:29092"} 
 	producer sarama.SyncProducer
+	connStr = "postgres://postgres:password@localhost:5432/event_streaming"
 )
 
 func main() {
