@@ -1,16 +1,16 @@
 use crate::worker::Event;
-use kafka::producer::{Producer, Record, RequiredAcks};
-use std::time::Duration;
+use rdkafka::config::ClientConfig;
+use rdkafka::producer::{BaseProducer, BaseRecord};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 pub struct KafkaProducer {
-    producer: Producer,
+    producer: BaseProducer,
 }
 
 impl KafkaProducer {
     pub fn new() -> Self {
-        let producer = Producer::from_hosts(vec!["kafka:29092".to_owned()])
-            .with_ack_timeout(Duration::from_secs(1))
-            .with_required_acks(RequiredAcks::One)
+        let producer: BaseProducer = ClientConfig::new()
+            .set("bootstrap.servers", "kafka:29092")
             .create()
             .expect("Failed to create Kafka producer");
 
@@ -18,13 +18,26 @@ impl KafkaProducer {
     }
 
     pub fn send(&mut self, payload: Event) {
-        let topic = payload.clone().event_type;
+        let topic = &payload.event_type;
         let payload = serde_json::to_string(&payload).unwrap();
-        let record = Record::from_value(&topic, payload.as_bytes()).with_partition(1);
+
+        // Get the current timestamp
+        let current_timestamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Time went backwards")
+            .as_millis() as i64;
+
         println!("Sending payload: {:?}", payload);
 
-        if let Err(e) = self.producer.send(&record) {
+        let record = BaseRecord::<(), String>::to(topic)
+            .payload(&payload)
+            .timestamp(current_timestamp);
+
+        if let Err(e) = self.producer.send(record) {
             println!("Failed to send message to Kafka: {:?}", e);
         }
+
+        // Poll to handle delivery reports
+        self.producer.poll(std::time::Duration::from_millis(100));
     }
 }
