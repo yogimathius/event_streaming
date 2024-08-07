@@ -1,4 +1,4 @@
-module go-producer
+module go-consumer
 
 go 1.22.4
 
