@@ -24,31 +24,11 @@ type Message struct {
 var (
 	brokers  = []string{"kafka:29092"} 
 	producer sarama.SyncProducer
+	connStr = "postgres://postgres:password@localhost:5432/event_streaming"
 )
 
 func main() {
-		// connStr := "postgres://postgres:password@localhost:5432/event_streaming"
-    // db, err := sql.Open("postgres", connStr)
-    // if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// defer db.Close()
-
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// defer db.Close()
-		// teamName := os.Getenv("TEAM")
-		// teamId := os.Getenv("TEAM_ID")
-		// teamID, err := strconv.Atoi(teamId)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// workers, err := fetchWorkerData(db, teamID)
-    // if err != nil {
-    //     log.Fatal(err)
-    // }
-		// log.Printf("Workers for team %d: %s\n", teamID, workers)
+		initDb()
 		initKafkaProducer()
 
     brokers := []string{os.Getenv("KAFKA_BROKER")}
@@ -147,6 +127,17 @@ func fetchWorkerData(db *sql.DB, teamID int) (string, error) {
 	}
 
 	return routineType, nil
+}
+
+func initDb() *sql.DB {
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+			log.Fatalf("Error connecting to database: %v\n", err)
+	}
+	if err = db.Ping(); err != nil {
+			log.Fatalf("Error pinging database: %v\n", err)
+	}
+	return db
 }
 
 func initKafkaProducer() {
