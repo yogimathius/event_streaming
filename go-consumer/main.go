@@ -1,6 +1,7 @@
 package main
 
 import (
+	db "go-consumer/database"
 	"go-consumer/kafka"
 	"go-consumer/worker"
 	"log"
@@ -9,12 +10,11 @@ import (
 )
 
 func main() {
-	// Initialize database connection
-	// database, err := db.InitDb()
-	// if err != nil {
-	// 	log.Fatalf("Database initialization failed: %v", err)
-	// }
-	// defer database.Close()
+	database, err := db.InitDb()
+	if err != nil {
+		log.Fatalf("Database initialization failed: %v", err)
+	}
+	defer database.Close()
 
 	producer, err := kafka.NewProducer([]string{"kafka:29092"})
 	if err != nil {
@@ -32,5 +32,5 @@ func main() {
 	defer consumer.Close()
 
 	// Start consuming messages
-	consumer.StartConsuming(topics)
+	consumer.StartConsuming(topics, producer)
 }

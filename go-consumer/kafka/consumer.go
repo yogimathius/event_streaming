@@ -34,7 +34,7 @@ func NewConsumer(brokers []string, producer Producer, workerDelegator worker.Del
 	}, nil
 }
 
-func (c *Consumer) StartConsuming(topics []string) {
+func (c *Consumer) StartConsuming(topics []string, producer Producer) {
 	for _, topic := range topics {
 		partitions, err := c.consumer.Partitions(topic)
 		if err != nil {
@@ -42,14 +42,15 @@ func (c *Consumer) StartConsuming(topics []string) {
 		}
 
 		for _, partition := range partitions {
-			go c.consumePartition(topic, partition)
+			log.Default().Printf("Consuming topic on %s partition %d\n", topic, partition)
+			go c.consumePartition(topic, partition, producer)
 		}
 	}
 
 	select {}
 }
 
-func (c *Consumer) consumePartition(topic string, partition int32) {
+func (c *Consumer) consumePartition(topic string, partition int32, producer Producer) {
 	partitionConsumer, err := c.consumer.ConsumePartition(topic, partition, sarama.OffsetNewest)
 	if err != nil {
 		log.Fatalf("Failed to start partition consumer for topic %s partition %d: %v", topic, partition, err)
@@ -57,11 +58,11 @@ func (c *Consumer) consumePartition(topic string, partition int32) {
 	defer partitionConsumer.Close()
 
 	for msg := range partitionConsumer.Messages() {
-		c.processMessage(msg)
+		c.processMessage(msg, producer)
 	}
 }
 
-func (c *Consumer) processMessage(msg *sarama.ConsumerMessage) {
+func (c *Consumer) processMessage(msg *sarama.ConsumerMessage, producer Producer) {
 	var message message.Message
 	if err := json.Unmarshal(msg.Value, &message); err != nil {
 		log.Printf("Error unmarshalling message: %v\n", err)
@@ -71,7 +72,7 @@ func (c *Consumer) processMessage(msg *sarama.ConsumerMessage) {
 		message.Status = "message consumed"
 		c.producer.SendMessage(message)
 
-		c.workerDelegator.Delegate(message)
+		c.workerDelegator.Delegate(message, producer)
 	}
 }
 
