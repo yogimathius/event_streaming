@@ -3,6 +3,7 @@ use crate::{
     worker::{Event, Priority, Transmitter},
 };
 use kafka::consumer::{Consumer, FetchOffset, GroupOffsetStorage};
+use uuid::Uuid;
 
 pub struct KafkaConsumer {
     consumer: Consumer,
@@ -19,7 +20,7 @@ impl KafkaConsumer {
             .with_fallback_offset(FetchOffset::Earliest)
             .with_offset_storage(Some(GroupOffsetStorage::Kafka))
             .create()
-            .unwrap();
+            .expect("Failed to create Kafka consumer");
         let producer = KafkaProducer::new();
         KafkaConsumer { consumer, producer }
     }
@@ -66,23 +67,23 @@ impl KafkaConsumer {
     fn delegate_to_high_worker(&mut self, mut event: Event, tx: &Transmitter) {
         println!("Delegated to high priority worker: {:?}", event);
         tx.send(event.clone());
-        event.status = "delegated high priority".to_owned();
-        event.event_time = chrono::Utc::now().to_rfc3339();
-        self.producer.send(event);
+        self.update_event_status(event, "delegated high priority");
     }
 
     fn delegate_to_med_worker(&mut self, mut event: Event, tx: &Transmitter) {
         println!("Delegated to medium priority worker: {:?}", event);
         tx.send(event.clone());
-        event.status = "delegated medium priority".to_owned();
-        event.event_time = chrono::Utc::now().to_rfc3339();
-        self.producer.send(event);
+        self.update_event_status(event, "delegated medium priority");
     }
 
     fn delegate_to_low_worker(&mut self, mut event: Event, tx: &Transmitter) {
         println!("Delegated to low priority worker: {:?}", event);
         tx.send(event.clone());
-        event.status = "delegated low priority".to_owned();
+        self.update_event_status(event, "delegated low priority");
+    }
+
+    fn update_event_status(&mut self, mut event: Event, status: &str) {
+        event.status = status.to_owned();
         event.event_time = chrono::Utc::now().to_rfc3339();
         self.producer.send(event);
     }
