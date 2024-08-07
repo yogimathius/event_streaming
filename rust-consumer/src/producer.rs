@@ -21,7 +21,7 @@ impl KafkaProducer {
         let topic = payload.clone().event_type;
         let payload = serde_json::to_string(&payload).unwrap();
         let record = Record::from_value(&topic, payload.as_bytes()).with_partition(1);
-        println!("Sending payload: {:?}", record);
+        println!("Sending payload: {:?}", payload);
 
         if let Err(e) = self.producer.send(&record) {
             println!("Failed to send message to Kafka: {:?}", e);
