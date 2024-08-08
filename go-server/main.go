@@ -1,37 +1,37 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	db "gin-kafka-producer/database"
+	"gin-kafka-producer/kafka"
+	"gin-kafka-producer/message"
+
 	"log"
 	"net/http"
-	"time"
 
-	"github.com/IBM/sarama"
 	"github.com/gin-gonic/gin"
 )
 
-type Message struct {
-	Id string `json:"id"`
-	EventType string    `json:"event_type"`
-	EventTime time.Time `json:"event_time"`
-	Priority  string    `json:"priority"`
-	Description string `json:"description"`
-	Status string `json:"status"`
+type Producer interface {
+	SendMessage(message.Message) error
 }
 
-var (
-	brokers  = []string{"kafka:29092"} 
-	producer sarama.SyncProducer
-	connStr = "postgres://postgres:password@localhost:5432/event_streaming"
-)
-
 func main() {
-	initKafkaProducer()
-
+	database, err := db.InitDb()
+	if err != nil {
+		log.Fatalf("Database initialization failed: %v", err)
+	}
+	defer database.Close()
+	producer, err := kafka.NewProducer([]string{"kafka:29092"})
+	if err != nil {
+		log.Fatalf("Kafka producer initialization failed: %v", err)
+	}
+	defer producer.Close()
 	router := gin.Default()
 
-	router.POST("/message", handleMessage)
+	router.POST("/message", func(c *gin.Context) {
+		handleMessage(c, producer)
+	})
 
 	fmt.Println("Server listening on port 8080...")
 	router.Run(":8080")
@@ -43,47 +43,14 @@ func main() {
 	}()
 }
 
-func handleMessage(c *gin.Context) {
-	var msg Message
+func handleMessage(c *gin.Context, producer Producer) {
+	var msg message.Message
 	msg.Status = "message produced"
 	if err := c.ShouldBindJSON(&msg); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	sendMessageToKafka(msg)
+	producer.SendMessage(msg)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Message sent to Kafka successfully"})
-}
-
-func initKafkaProducer() {
-	config := sarama.NewConfig()
-	config.Producer.RequiredAcks = sarama.WaitForLocal
-	config.Producer.Return.Successes = true
-
-	var err error
-	producer, err = sarama.NewSyncProducer(brokers, config)
-	if err != nil {
-		log.Fatalf("Error creating Kafka producer: %v", err)
-	}
-
-	fmt.Println("Kafka producer initialized")
-}
-
-
-func sendMessageToKafka(message Message) {
-	jsonMessage, err := json.Marshal(message)
-	
-	if err != nil {
-		log.Printf("Failed to marshal message to JSON: %v\n", err)
-		return
-	}
-	partition, offset, err := producer.SendMessage(&sarama.ProducerMessage{
-		Topic: message.EventType,
-		Value: sarama.StringEncoder(jsonMessage),
-	})
-	fmt.Printf("Message sent to partition %d at offset %d: %s\n", partition, offset, jsonMessage)
-	if err != nil {
-		log.Printf("Failed to send message to Kafka: %v\n", err)
-		return
-	}
 }
