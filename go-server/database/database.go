@@ -9,6 +9,13 @@ import (
 
 var connStr = "postgres://postgres:pass123@postgres:5432/event_streaming?sslmode=disable"
 
+type Event struct {
+	EventID           int
+	GuestSatisfaction bool
+	StressMarks       int
+	Timestamp         string
+}
+
 func InitDb() (*sql.DB, error) {
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
@@ -20,20 +27,20 @@ func InitDb() (*sql.DB, error) {
 	return db, nil
 }
 
-func FetchLatestEvent(db *sql.DB) (string, error) {
-	var event string
-	query := `SELECT * FROM events ORDER BY id DESC LIMIT 1`
+func FetchLatestEvent(db *sql.DB) (int, error) {
+	var event_id int
+	query := `SELECT event_id FROM events ORDER BY id DESC LIMIT 1`
 
 	row := db.QueryRow(query)
-	err := row.Scan(&event)
+	err := row.Scan(&event_id)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
-	return event, nil
+	return event_id, nil
 }
 
-func CreateEvent(db *sql.DB, event string) (int, error) {
+func CreateEvent(db *sql.DB, event Event) (int, error) {
 	query := `INSERT INTO events (event) VALUES ($1) RETURNING event_id`
 
 	var eventID int

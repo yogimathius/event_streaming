@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	db "gin-kafka-producer/database"
 	"gin-kafka-producer/kafka"
@@ -30,7 +31,7 @@ func main() {
 	router := gin.Default()
 
 	router.POST("/message", func(c *gin.Context) {
-		handleMessage(c, producer)
+		handleMessage(c, producer, database)
 	})
 
 	fmt.Println("Server listening on port 8080...")
@@ -43,8 +44,19 @@ func main() {
 	}()
 }
 
-func handleMessage(c *gin.Context, producer Producer) {
+func handleMessage(c *gin.Context, producer Producer, database *sql.DB) {
 	var msg message.Message
+	currentEventId, err := db.FetchLatestEvent(database)
+	if err != nil {
+		log.Printf("Error fetching latest event: %v\n", err)
+	}
+	if currentEventId == 0 {
+		event := db.Event{
+			GuestSatisfaction: true,
+			StressMarks:       0,
+		}
+		currentEventId, err = db.CreateEvent(database, event)
+	}
 	msg.Status = "message produced"
 	if err := c.ShouldBindJSON(&msg); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
