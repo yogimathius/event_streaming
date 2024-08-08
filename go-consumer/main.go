@@ -24,7 +24,7 @@ func main() {
 
 	brokers := []string{os.Getenv("KAFKA_BROKER")}
 	topics := strings.Split(os.Getenv("KAFKA_TOPICS"), ",")
-	workerDelegator := worker.WorkerDelegator{}
+	workerDelegator := worker.NewWorkerDelegator(database)
 	consumer, err := kafka.NewConsumer(brokers, producer, workerDelegator)
 	if err != nil {
 		log.Fatalf("Kafka consumer initialization failed: %v", err)

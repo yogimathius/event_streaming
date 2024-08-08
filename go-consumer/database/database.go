@@ -32,3 +32,4 @@ func FetchWorkerData(db *sql.DB, teamID int) (string, error) {
 
 	return routineType, nil
 }
+
