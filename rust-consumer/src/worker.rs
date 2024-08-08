@@ -117,7 +117,7 @@ impl Channel {
         }
     }
 
-    pub fn start_worker(mut self, routine_type: RoutineType) -> thread::JoinHandle<()> {
+    pub fn start_worker(mut self, _routine_type: RoutineType) -> thread::JoinHandle<()> {
         let rx = self.rx.clone();
 
         thread::spawn(move || {
