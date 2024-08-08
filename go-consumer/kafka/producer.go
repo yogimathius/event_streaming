@@ -24,6 +24,7 @@ func NewProducer(brokers []string) (*KafkaProducer, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error creating Kafka producer: %v", err)
 	}
+	fmt.Println("Kafka producer initialized")
 
 	return &KafkaProducer{
 		syncProducer: producer,
