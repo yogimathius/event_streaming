@@ -2,7 +2,7 @@
 
 CREATE TABLE IF NOT EXISTS "events" (
   "event_id" SERIAL PRIMARY KEY,
-  "guest_satisfaction" BOOLEAN, -- TRUE if happy, FALSE if upset
+  "guest_satisfaction" BOOLEAN DEFAULT true, -- TRUE if happy, FALSE if upset
   "stress_marks" INT DEFAULT 0, -- Number of stress marks recorded
   "timestamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
