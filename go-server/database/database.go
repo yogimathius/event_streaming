@@ -29,7 +29,7 @@ func InitDb() (*sql.DB, error) {
 
 func FetchLatestEvent(db *sql.DB) (int, error) {
 	var event_id int
-	query := `SELECT event_id FROM events ORDER BY id DESC LIMIT 1`
+	query := `SELECT event_id FROM events ORDER BY event_id DESC LIMIT 1`
 
 	row := db.QueryRow(query)
 	err := row.Scan(&event_id)
@@ -41,10 +41,10 @@ func FetchLatestEvent(db *sql.DB) (int, error) {
 }
 
 func CreateEvent(db *sql.DB, event Event) (int, error) {
-	query := `INSERT INTO events (event) VALUES ($1) RETURNING event_id`
+	query := `INSERT INTO events (guest_satisfaction, stress_marks) VALUES ($1, $2) RETURNING event_id`
 
 	var eventID int
-	err := db.QueryRow(query, event).Scan(&eventID)
+	err := db.QueryRow(query, event.GuestSatisfaction, event.StressMarks).Scan(&eventID)
 	if err != nil {
 			return 0, err
 	}
