@@ -47,16 +47,19 @@ func main() {
 func handleMessage(c *gin.Context, producer Producer, database *sql.DB) {
 	var msg message.Message
 	currentEventId, err := db.FetchLatestEvent(database)
-	if err != nil {
-		log.Printf("Error fetching latest event: %v\n", err)
-	}
-	if currentEventId == 0 {
+	if currentEventId == 0 || err != nil {
+		log.Printf("Could not fetch any events: %v\n", err)
 		event := db.Event{
 			GuestSatisfaction: true,
 			StressMarks:       0,
 		}
 		currentEventId, err = db.CreateEvent(database, event)
 	}
+	if err != nil {
+		log.Printf("Could not create event: %v\n", err)
+	}
+	log.Printf("Current event ID: %d\n", currentEventId)
+	msg.EventId = currentEventId
 	msg.Status = "message produced"
 	if err := c.ShouldBindJSON(&msg); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
