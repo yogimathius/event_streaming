@@ -3,6 +3,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -29,12 +31,23 @@ func InitDb() (*sql.DB, error) {
 
 func FetchLatestEvent(db *sql.DB) (int, error) {
 	var event_id int
-	query := `SELECT event_id FROM events ORDER BY event_id DESC LIMIT 1`
+	var timestamp time.Time
 
+	query := `SELECT event_id, timestamp FROM events ORDER BY event_id DESC LIMIT 1`
 	row := db.QueryRow(query)
-	err := row.Scan(&event_id)
-	if err != nil {
-		return 0, err
+	err := row.Scan(&event_id, &timestamp)
+	if err == sql.ErrNoRows {
+			log.Println("No events found in the database.")
+			return 0, nil
+	} else if err != nil {
+			log.Printf("Error scanning row: %v\n", err)
+			return 0, err
+	}
+
+	// Check if the timestamp is greater than 6 minutes ago
+	if timestamp.Before(time.Now().Add(-6 * time.Minute)) {
+			log.Println("Latest event is older than 6 minutes.")
+			return 0, nil
 	}
 
 	return event_id, nil
