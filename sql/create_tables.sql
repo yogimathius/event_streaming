@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS "event_messages" (
   "priority" VARCHAR(10) NOT NULL,
   "description" TEXT,
   "timestamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "status" VARCHAR(155) NOT NULL,
   FOREIGN KEY ("event_id") REFERENCES "events" ("event_id")
 );
 
