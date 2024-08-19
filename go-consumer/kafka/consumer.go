@@ -79,20 +79,16 @@ func (c *Consumer) processMessage(msg *sarama.ConsumerMessage) {
 	if message.Status == "message produced" {
 		message.Status = "message consumed"
 		c.producer.SendMessage(message)
-		var queue string
 
-		switch message.Priority {
-		case "High":
-			queue = "high-priority-queue"
-		case "Medium":
-			queue = "medium-priority-queue"
-		case "Low":
-			queue = "low-priority-queue"
-		default:
-			fmt.Printf("Unknown priority: %s\n", message.Priority)
+		messageJSON, err := json.Marshal(message)
+		if err != nil {
+			log.Printf("Error marshalling message: %v\n", err)
+			return
 		}
 
-		err := rdb.RPush(ctx, queue, message).Err()
+		var queue = fmt.Sprintf("%s-%s", message.EventType, message.Priority)
+
+		err = rdb.RPush(ctx, queue, messageJSON).Err()
 		if err != nil {
 			log.Fatalf("Failed to push message to %s: %v\n", queue, err)
 			return 
