@@ -7,7 +7,6 @@ import (
 	"log"
 
 	"go-consumer/message"
-	"go-consumer/worker"
 
 	"github.com/IBM/sarama"
 	"github.com/go-redis/redis/v8"
@@ -22,14 +21,13 @@ var ctx = context.Background()
 type Consumer struct {
 	consumer    sarama.Consumer
 	producer    Producer
-	workerDelegator worker.Delegator
 }
 
 type Producer interface {
 	SendMessage(message.Message) error
 }
 
-func NewConsumer(brokers []string, producer Producer, workerDelegator worker.Delegator) (*Consumer, error) {
+func NewConsumer(brokers []string, producer Producer) (*Consumer, error) {
 	consumer, err := sarama.NewConsumer(brokers, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to start consumer: %v", err)
@@ -38,7 +36,6 @@ func NewConsumer(brokers []string, producer Producer, workerDelegator worker.Del
 	return &Consumer{
 		consumer:    consumer,
 		producer:    producer,
-		workerDelegator: workerDelegator,
 	}, nil
 }
 
