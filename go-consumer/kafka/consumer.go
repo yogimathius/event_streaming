@@ -1,6 +1,7 @@
 package kafka
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -9,7 +10,14 @@ import (
 	"go-consumer/worker"
 
 	"github.com/IBM/sarama"
+	"github.com/go-redis/redis/v8"
 )
+
+var rdb = redis.NewClient(&redis.Options{
+	Addr: "redis:6379",
+})
+
+var ctx = context.Background()
 
 type Consumer struct {
 	consumer    sarama.Consumer
@@ -34,7 +42,7 @@ func NewConsumer(brokers []string, producer Producer, workerDelegator worker.Del
 	}, nil
 }
 
-func (c *Consumer) StartConsuming(topics []string, producer Producer) {
+func (c *Consumer) StartConsuming(topics []string) {
 	for _, topic := range topics {
 		partitions, err := c.consumer.Partitions(topic)
 		if err != nil {
@@ -43,14 +51,14 @@ func (c *Consumer) StartConsuming(topics []string, producer Producer) {
 
 		for _, partition := range partitions {
 			log.Default().Printf("Consuming topic on %s partition %d\n", topic, partition)
-			go c.consumePartition(topic, partition, producer)
+			go c.consumePartition(topic, partition)
 		}
 	}
 
 	select {}
 }
 
-func (c *Consumer) consumePartition(topic string, partition int32, producer Producer) {
+func (c *Consumer) consumePartition(topic string, partition int32) {
 	partitionConsumer, err := c.consumer.ConsumePartition(topic, partition, sarama.OffsetNewest)
 	if err != nil {
 		log.Fatalf("Failed to start partition consumer for topic %s partition %d: %v", topic, partition, err)
@@ -58,11 +66,11 @@ func (c *Consumer) consumePartition(topic string, partition int32, producer Prod
 	defer partitionConsumer.Close()
 
 	for msg := range partitionConsumer.Messages() {
-		c.processMessage(msg, producer)
+		c.processMessage(msg)
 	}
 }
 
-func (c *Consumer) processMessage(msg *sarama.ConsumerMessage, producer Producer) {
+func (c *Consumer) processMessage(msg *sarama.ConsumerMessage) {
 	var message message.Message
 	if err := json.Unmarshal(msg.Value, &message); err != nil {
 		log.Printf("Error unmarshalling message: %v\n", err)
@@ -71,8 +79,27 @@ func (c *Consumer) processMessage(msg *sarama.ConsumerMessage, producer Producer
 	if message.Status == "message produced" {
 		message.Status = "message consumed"
 		c.producer.SendMessage(message)
+		var queue string
 
-		c.workerDelegator.Delegate(message, producer)
+		switch message.Priority {
+		case "High":
+			queue = "high-priority-queue"
+		case "Medium":
+			queue = "medium-priority-queue"
+		case "Low":
+			queue = "low-priority-queue"
+		default:
+			fmt.Printf("Unknown priority: %s\n", message.Priority)
+		}
+
+		err := rdb.RPush(ctx, queue, message).Err()
+		if err != nil {
+			log.Fatalf("Failed to push message to %s: %v\n", queue, err)
+			return 
+		}
+	
+		fmt.Printf("Task delegated to %s: %v\n", queue, message)
+		return
 	}
 }
 

@@ -31,6 +31,5 @@ func main() {
 	}
 	defer consumer.Close()
 
-	// Start consuming messages
-	consumer.StartConsuming(topics, producer)
+	consumer.StartConsuming(topics)
 }
