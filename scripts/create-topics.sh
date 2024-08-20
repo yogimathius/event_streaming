@@ -2,6 +2,7 @@
 
 # Define your topics here
 KAFKA_TOPICS=(
+  "event_created"
   "brawl"
   "not_on_list"
   "accident"
