@@ -52,13 +52,18 @@ func (p *KafkaProducer) SendMessage(message message.Message) error {
 	return nil
 }
 
+type EventCreatedMessage struct {
+	EventType string    `json:"event_type"`
+	EventTime time.Time `json:"event_time"`
+}
+
 func (p *KafkaProducer) SendEventCreatedMessage(timestamp string) error {
 	eventTime, err := time.Parse(time.RFC3339, timestamp)
 	if err != nil {
 		return fmt.Errorf("failed to parse timestamp: %v", err)
 	}
 
-	message := message.Message{
+	message := EventCreatedMessage {
 		EventType: "event_created",
 		EventTime: eventTime,
 	}
