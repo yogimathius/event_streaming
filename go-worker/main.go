@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	db "go-worker/database"
 	"go-worker/kafka"
 	"go-worker/message"
@@ -23,11 +22,6 @@ func main() {
 
 	ctx := context.Background()
 
-	fmt.Printf("main Context: %v\n", ctx)
-	fmt.Printf("main Redis client: %v\n", rdb)
-
-	priority := []string{os.Getenv("PRIORITY")}
-
 	database, err := db.InitDb()
 	if err != nil {
 		log.Fatalf("Database initialization failed: %v", err)
@@ -40,7 +34,10 @@ func main() {
 	}
 	defer producer.Close()
 	
-	pool := NewWorkerPool(5, rdb, ctx, priority[0], database, producer)
+	priority := []string{os.Getenv("PRIORITY")}
+	routine := os.Getenv("ROUTINE")
+
+	pool := NewWorkerPool(7, rdb, ctx, priority[0], database, producer, routine)
 	pool.Run()
 }
 
