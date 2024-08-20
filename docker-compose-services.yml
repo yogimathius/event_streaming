@@ -29,7 +29,6 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./create-topics.sh:/scripts/create-topics.sh
     networks:
       - marry_me_kafka
 
