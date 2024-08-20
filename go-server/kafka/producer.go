@@ -52,6 +52,35 @@ func (p *KafkaProducer) SendMessage(message message.Message) error {
 	return nil
 }
 
+func (p *KafkaProducer) SendEventCreatedMessage(timestamp string) error {
+	eventTime, err := time.Parse(time.RFC3339, timestamp)
+	if err != nil {
+		return fmt.Errorf("failed to parse timestamp: %v", err)
+	}
+
+	message := message.Message{
+		EventType: "event_created",
+		EventTime: eventTime,
+	}
+
+	jsonMessage, err := json.Marshal(message)
+	if err != nil {
+		return fmt.Errorf("failed to marshal message to JSON: %v", err)
+	}
+
+	partition, offset, err := p.syncProducer.SendMessage(&sarama.ProducerMessage{
+		Topic: message.EventType,
+		Value: sarama.StringEncoder(jsonMessage),
+	})
+
+	if err != nil {
+		return fmt.Errorf("failed to send message to Kafka: %v", err)
+	}
+
+	fmt.Printf("Message sent to partition %d at offset %d: %s\n", partition, offset, jsonMessage)
+	return nil
+}
+
 func (p *KafkaProducer) Close() error {
 	return p.syncProducer.Close()
 }
