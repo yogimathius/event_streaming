@@ -5,6 +5,7 @@ go 1.22.4
 require (
 	github.com/IBM/sarama v1.43.3
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/lib/pq v1.10.9
 )
 
 require (
