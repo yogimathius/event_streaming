@@ -40,7 +40,7 @@ func (p *KafkaProducer) SendMessage(message message.Message) error {
 		return fmt.Errorf("failed to marshal message to JSON: %v", err)
 	}
 
-	partition, offset, err := p.syncProducer.SendMessage(&sarama.ProducerMessage{
+	_, _, err = p.syncProducer.SendMessage(&sarama.ProducerMessage{
 		Topic: message.EventType,
 		Value: sarama.StringEncoder(jsonMessage),
 	})
@@ -49,7 +49,6 @@ func (p *KafkaProducer) SendMessage(message message.Message) error {
 		return fmt.Errorf("failed to send message to Kafka: %v", err)
 	}
 
-	fmt.Printf("Message sent to partition %d at offset %d: %s\n", partition, offset, jsonMessage)
 	return nil
 }
 
