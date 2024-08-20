@@ -1,4 +1,4 @@
-package main
+package pool
 
 import (
 	"context"
@@ -12,6 +12,10 @@ import (
 
 	"github.com/go-redis/redis/v8"
 )
+
+type Producer interface {
+	SendMessage(message.Message) error
+}
 
 type Worker struct {
 	ID           int

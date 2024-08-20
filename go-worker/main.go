@@ -4,16 +4,12 @@ import (
 	"context"
 	db "go-worker/database"
 	"go-worker/kafka"
-	"go-worker/message"
+	"go-worker/pool"
 	"log"
 	"os"
 
 	"github.com/go-redis/redis/v8"
 )
-
-type Producer interface {
-	SendMessage(message.Message) error
-}
 
 func main() {
 	rdb := redis.NewClient(&redis.Options{
@@ -37,7 +33,7 @@ func main() {
 	priority := []string{os.Getenv("PRIORITY")}
 	routine := os.Getenv("ROUTINE")
 
-	pool := NewWorkerPool(7, rdb, ctx, priority[0], database, producer, routine)
+	pool := pool.NewWorkerPool(7, rdb, ctx, priority[0], database, producer, routine)
 	pool.Run()
 }
 
