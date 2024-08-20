@@ -4,6 +4,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "dirty_table-Low"
+      ROUTINE: "Intermittent"
     networks:
       - marry_me_kafka
 
@@ -12,6 +13,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "dirty_table-Medium"
+      ROUTINE: "Intermittent"
     networks:
       - marry_me_kafka
 
@@ -20,6 +22,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "dirty_table-High"
+      ROUTINE: "Intermittent"
     networks:
       - marry_me_kafka
 
@@ -28,6 +31,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "broken_items-Low"
+      ROUTINE: "Intermittent"
     networks:
       - marry_me_kafka
 
@@ -36,6 +40,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "broken_items-Medium"
+      ROUTINE: "Intermittent"
     networks:
       - marry_me_kafka
 
@@ -44,6 +49,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "broken_items-High"
+      ROUTINE: "Intermittent"
     networks:
       - marry_me_kafka
 
@@ -52,6 +58,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "bad_food-Low"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -60,6 +67,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "bad_food-Medium"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -68,6 +76,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "bad_food-High"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -76,6 +85,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "music-Low"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -84,6 +94,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "music-Medium"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -92,6 +103,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "music-High"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -100,6 +112,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "feeling_ill-Low"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -108,6 +121,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "feeling_ill-Medium"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -116,6 +130,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "feeling_ill-High"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -124,6 +139,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "bride-Low"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -132,6 +148,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "bride-Medium"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -140,6 +157,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "bride-High"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -148,6 +166,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "groom-Low"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -156,6 +175,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "groom-Medium"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -164,6 +184,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "groom-High"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
@@ -172,6 +193,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "broken_items-Low"
+      ROUTINE: "Standard"
     networks:
       - marry_me_kafka
 
@@ -180,6 +202,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "broken_items-Medium"
+      ROUTINE: "Standard"
     networks:
       - marry_me_kafka
 
@@ -188,6 +211,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "broken_items-High"
+      ROUTINE: "Standard"
     networks:
       - marry_me_kafka
 
@@ -196,6 +220,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "accident-Low"
+      ROUTINE: "Standard"
     networks:
       - marry_me_kafka
 
@@ -204,6 +229,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "accident-Medium"
+      ROUTINE: "Standard"
     networks:
       - marry_me_kafka
 
@@ -212,6 +238,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "accident-High"
+      ROUTINE: "Standard"
     networks:
       - marry_me_kafka
 
@@ -220,6 +247,7 @@ services:
       context: ./go-worker
     environment:
       PRIORITY: "feeling_ill-Low"
+      ROUTINE: "Standard"
     networks:
       - marry_me_kafka
 
