@@ -19,6 +19,7 @@ impl KafkaProducer {
 
     pub fn send(&mut self, payload: Event) {
         let topic = &payload.event_type;
+        let payload_is_pickup = &payload.status == "picked up by worker";
         let payload = serde_json::to_string(&payload).unwrap();
 
         // Get the current timestamp
@@ -27,7 +28,9 @@ impl KafkaProducer {
             .expect("Time went backwards")
             .as_millis() as i64;
 
-        println!("Sending payload: {:?}", payload);
+        if payload_is_pickup {
+            println!("Sending payload: {:?}", payload);
+        }
 
         let record = BaseRecord::<(), String>::to(topic)
             .payload(&payload)

@@ -46,8 +46,8 @@ func FetchLatestEvent(db *sql.DB) (int, error) {
 
 	// Check if the timestamp is greater than 6 minutes ago
 	if timestamp.Before(time.Now().Add(-6 * time.Minute)) {
-			log.Println("Latest event is older than 6 minutes.")
-			return 0, nil
+		log.Println("Latest event is older than 6 minutes.")
+		return 0, nil
 	}
 
 	return event_id, nil

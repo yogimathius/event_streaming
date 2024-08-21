@@ -64,7 +64,7 @@ func (p *KafkaProducer) SendEventCreatedMessage() error {
 	if err != nil {
 		return fmt.Errorf("failed to marshal message to JSON: %v", err)
 	}
-	fmt.Println("Event created message: ", jsonMessage)
+	fmt.Println("Event created message: ", message)
 	_, _, err = p.syncProducer.SendMessage(&sarama.ProducerMessage{
 		Topic: message.EventType,
 		Value: sarama.StringEncoder(jsonMessage),
