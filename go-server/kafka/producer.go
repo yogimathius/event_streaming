@@ -39,7 +39,7 @@ func (p *KafkaProducer) SendMessage(message message.Message) error {
 		return fmt.Errorf("failed to marshal message to JSON: %v", err)
 	}
 
-	partition, offset, err := p.syncProducer.SendMessage(&sarama.ProducerMessage{
+	_, _, err = p.syncProducer.SendMessage(&sarama.ProducerMessage{
 		Topic: message.EventType,
 		Value: sarama.StringEncoder(jsonMessage),
 	})
@@ -48,32 +48,24 @@ func (p *KafkaProducer) SendMessage(message message.Message) error {
 		return fmt.Errorf("failed to send message to Kafka: %v", err)
 	}
 
-	fmt.Printf("Message sent to partition %d at offset %d: %s\n", partition, offset, jsonMessage)
 	return nil
 }
 
 type EventCreatedMessage struct {
 	EventType string    `json:"event_type"`
-	EventTime time.Time `json:"event_time"`
 }
 
-func (p *KafkaProducer) SendEventCreatedMessage(timestamp string) error {
-	eventTime, err := time.Parse(time.RFC3339, timestamp)
-	if err != nil {
-		return fmt.Errorf("failed to parse timestamp: %v", err)
-	}
-
+func (p *KafkaProducer) SendEventCreatedMessage() error {
 	message := EventCreatedMessage {
 		EventType: "event_created",
-		EventTime: eventTime,
 	}
 
 	jsonMessage, err := json.Marshal(message)
 	if err != nil {
 		return fmt.Errorf("failed to marshal message to JSON: %v", err)
 	}
-
-	partition, offset, err := p.syncProducer.SendMessage(&sarama.ProducerMessage{
+	fmt.Println("Event created message: ", jsonMessage)
+	_, _, err = p.syncProducer.SendMessage(&sarama.ProducerMessage{
 		Topic: message.EventType,
 		Value: sarama.StringEncoder(jsonMessage),
 	})
@@ -82,7 +74,6 @@ func (p *KafkaProducer) SendEventCreatedMessage(timestamp string) error {
 		return fmt.Errorf("failed to send message to Kafka: %v", err)
 	}
 
-	fmt.Printf("Message sent to partition %d at offset %d: %s\n", partition, offset, jsonMessage)
 	return nil
 }
 

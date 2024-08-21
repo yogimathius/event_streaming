@@ -65,19 +65,16 @@ impl KafkaConsumer {
     }
 
     fn delegate_to_high_worker(&mut self, event: Event, tx: &Transmitter) {
-        println!("Delegated to high priority worker: {:?}", event);
         tx.send(event.clone());
         self.update_event_status(event, "delegated high priority");
     }
 
     fn delegate_to_med_worker(&mut self, event: Event, tx: &Transmitter) {
-        println!("Delegated to medium priority worker: {:?}", event);
         tx.send(event.clone());
         self.update_event_status(event, "delegated medium priority");
     }
 
     fn delegate_to_low_worker(&mut self, event: Event, tx: &Transmitter) {
-        println!("Delegated to low priority worker: {:?}", event);
         tx.send(event.clone());
         self.update_event_status(event, "delegated low priority");
     }

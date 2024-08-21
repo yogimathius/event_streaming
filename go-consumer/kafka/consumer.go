@@ -91,7 +91,6 @@ func (c *Consumer) processMessage(msg *sarama.ConsumerMessage) {
 			return 
 		}
 	
-		fmt.Printf("Task delegated to %s: %v\n", queue, message)
 		return
 	}
 }

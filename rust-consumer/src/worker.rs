@@ -126,7 +126,6 @@ impl Channel {
 
                 match job {
                     Some(mut job) => {
-                        println!("Job: {:?}", job);
                         job.status = "picked up by worker".to_owned();
                         job.event_time = chrono::Utc::now().to_rfc3339();
                         self.producer.send(job.clone());
