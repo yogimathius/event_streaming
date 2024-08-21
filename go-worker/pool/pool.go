@@ -72,6 +72,7 @@ func NewWorkerPool(numWorkers int, rdb *redis.Client, ctx context.Context, prior
 			ctx:         ctx,
 		}
 		pool.workers[i] = worker
+		time.Sleep(5 * time.Second)
 		go pool.workerRoutine(worker)
 	}
 
