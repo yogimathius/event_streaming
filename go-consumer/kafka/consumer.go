@@ -90,6 +90,8 @@ func (c *Consumer) processMessage(msg *sarama.ConsumerMessage) {
 			log.Fatalf("Failed to push message to %s: %v\n", queue, err)
 			return 
 		}
+
+		log.Printf("Message sent to queue %s: %s\n", queue, messageJSON)
 	
 		return
 	}
