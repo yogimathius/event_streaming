@@ -64,10 +64,10 @@ func NewWorkerPool(numWorkers int, rdb *redis.Client, ctx context.Context, prior
 		producer:   producer,
 		routineType:  routinePeriods[routineType],
 	}
-	for i := 0; i < 2; i++ {
+	for i := 0; i < numWorkers; i++ {
 		worker := &Worker{
 			ID:          i + 1,
-			RoutineType: "Standard",
+			RoutineType: routineType,
 			Active:      true,
 			ctx:         ctx,
 		}
@@ -75,31 +75,20 @@ func NewWorkerPool(numWorkers int, rdb *redis.Client, ctx context.Context, prior
 		go pool.workerRoutine(worker)
 	}
 
-	// for i := 2; i < numWorkers; i++ {
-	// 	worker := &Worker{
-	// 		ID:          i + 1,
-	// 		RoutineType: "Standard",
-	// 		Active:      true,
-	// 		ctx:         ctx,
-	// 	}
-	// 	pool.workers[i] = worker
-	// 	time.Sleep(10 * time.Second)
-	// 	go pool.workerRoutine(worker)
-	// }
-
 	return pool
 }
 
 func (wp *WorkerPool) workerRoutine(worker *Worker) {
+	fmt.Printf("Worker %d ready\n", worker.ID)
 	time.Sleep(wp.routineType.Working)
 	
 	workingTimer := time.NewTimer(wp.routineType.Idling)
 	defer workingTimer.Stop()
 
 	for worker.Active {        
-
 		select {
 		case task := <-wp.taskQueue:
+			time.Sleep(3 * time.Second)
 			wp.processMessage(task)
 		case <-worker.ctx.Done():
 			fmt.Printf("Worker %d stopped due to context cancellation\n", worker.ID)
@@ -149,8 +138,27 @@ func (wp *WorkerPool) processMessage(msgString string) {
 	db.AddEventMessage(wp.db, 1, msg)
 }
 
+func (wp *WorkerPool) ActivateWorkers() {
+	fmt.Println("Activating worker pool")
+
+	if wp.workers == nil {
+			fmt.Println("Error: workers slice is nil")
+			return
+	}
+
+	for _, worker := range wp.workers {
+			if worker == nil {
+					fmt.Println("Error: worker is nil")
+					continue
+			}
+			worker.Active = true
+			fmt.Printf("Worker %d activated\n", worker.ID)
+			go wp.workerRoutine(worker) 
+	}
+}
+
 func (wp *WorkerPool) Run() {
-	fmt.Println("Worker pool started")
+	fmt.Println("Worker pool listening for messages")
 	for {
 		time := wp.routineType.Working
 		message, err := wp.rdb.BRPop(wp.ctx, time, wp.priority).Result()
