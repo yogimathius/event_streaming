@@ -15,7 +15,7 @@ import (
 
 type Producer interface {
 	SendMessage(message.Message) error
-	SendEventCreatedMessage(timestamp string) error
+	SendEventCreatedMessage() error
 }
 
 func main() {
@@ -55,7 +55,7 @@ func handleMessage(c *gin.Context, producer Producer, database *sql.DB) {
 			StressMarks:       0,
 		}
 		currentEventId, err = db.CreateEvent(database, event)
-		producer.SendEventCreatedMessage(event.Timestamp)
+		producer.SendEventCreatedMessage()
 	}
 	if err != nil {
 		log.Printf("Could not create event: %v\n", err)
