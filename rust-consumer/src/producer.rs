@@ -1,7 +1,8 @@
-use crate::worker::Event;
 use rdkafka::config::ClientConfig;
 use rdkafka::producer::{BaseProducer, BaseRecord};
 use std::time::{SystemTime, UNIX_EPOCH};
+
+use crate::event::Event;
 
 pub struct KafkaProducer {
     producer: BaseProducer,

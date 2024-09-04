@@ -1,7 +1,4 @@
-use crate::{
-    producer::KafkaProducer,
-    worker::{Event, Priority, Transmitter},
-};
+use crate::{event::Event, priority::Priority, producer::KafkaProducer, transmitter::Transmitter};
 use kafka::consumer::{Consumer, FetchOffset, GroupOffsetStorage};
 // use uuid::Uuid;
 
