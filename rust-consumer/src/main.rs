@@ -9,7 +9,7 @@ fn main() {
     let channel = Arc::new(Channel::new());
     let tx = channel.tx.clone();
 
-    let worker_handles: Vec<_> = (0..3)
+    let worker_handles: Vec<_> = (0..8)
         .map(|worker_id| {
             let channel = Arc::clone(&channel);
             thread::spawn(move || {
@@ -24,10 +24,8 @@ fn main() {
     let consumer_handle = thread::spawn(move || {
         kafka_consumer.poll(&tx_clone);
     });
-    // Ensure the worker threads completes
     for handle in worker_handles {
         handle.join().unwrap();
     }
-    // Ensure the consumer thread completes
     consumer_handle.join().unwrap();
 }
