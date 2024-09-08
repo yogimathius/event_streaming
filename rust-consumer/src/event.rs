@@ -7,7 +7,7 @@ use crate::priority::Priority;
 pub struct Event {
     pub event_type: String,
     pub priority: Priority,
-    description: String,
+    pub description: String,
     pub status: String,
     pub event_time: String,
     pub id: Uuid,
