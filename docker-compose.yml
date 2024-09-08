@@ -13,7 +13,7 @@ services:
     environment:
       KAFKA_BROKER: "kafka:29092"
       KAFKA_TOPICS: "brawl,not_on_list,accident"
-      TEAM: "security"
+      KAFKA_GROUP: "security"
       TEAM_ID: "1"
     networks:
       - marry_me_kafka

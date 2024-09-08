@@ -1,5 +1,7 @@
 use crate::{event::Event, priority::Priority, producer::KafkaProducer, transmitter::Transmitter};
+use dotenv::dotenv;
 use kafka::consumer::{Consumer, FetchOffset, GroupOffsetStorage};
+use std::env;
 // use uuid::Uuid;
 
 pub struct KafkaConsumer {
@@ -9,15 +11,26 @@ pub struct KafkaConsumer {
 
 impl KafkaConsumer {
     pub fn new() -> Self {
-        let consumer = Consumer::from_hosts(vec!["kafka:29092".to_owned()])
-            .with_group("security".to_owned())
-            .with_topic("brawl".to_owned())
-            .with_topic("not_on_list".to_owned())
-            .with_topic("accident".to_owned())
-            .with_fallback_offset(FetchOffset::Earliest)
-            .with_offset_storage(Some(GroupOffsetStorage::Kafka))
-            .create()
-            .expect("Failed to create Kafka consumer");
+        dotenv().ok();
+        let kafka_broker = env::var("KAFKA_BROKER").expect("KAFKA_HOSTS must be set");
+        let kafka_group = env::var("KAFKA_GROUP").expect("KAFKA_GROUP must be set");
+        let kafka_topics: Vec<String> = env::var("KAFKA_TOPICS")
+            .expect("KAFKA_TOPICS must be set")
+            .split(',')
+            .map(|s| s.to_owned())
+            .collect();
+
+        let consumer = {
+            let mut consumer_builder = Consumer::from_hosts(vec![kafka_broker])
+                .with_group(kafka_group)
+                .with_fallback_offset(FetchOffset::Earliest)
+                .with_offset_storage(Some(GroupOffsetStorage::Kafka));
+            for topic in kafka_topics {
+                consumer_builder = consumer_builder.with_topic(topic);
+            }
+            consumer_builder.create().unwrap()
+        };
+
         let producer = KafkaProducer::new();
         KafkaConsumer { consumer, producer }
     }
