@@ -2,7 +2,7 @@ use chrono::{DateTime, Utc};
 use crossbeam_channel::unbounded;
 use r2d2::{Pool, PooledConnection};
 use r2d2_postgres::{postgres::NoTls, PostgresConnectionManager};
-use rand::Rng;
+
 use std::{
     sync::{Arc, Mutex},
     thread,

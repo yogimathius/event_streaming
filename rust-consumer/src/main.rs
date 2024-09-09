@@ -1,31 +1,15 @@
-use std::{sync::Arc, thread};
-
-use workers::{
-    consumer::KafkaConsumer,
-    worker::{Channel, RoutineType},
-};
+use workers::app_state::AppState;
 
 fn main() {
-    let channel = Arc::new(Channel::new());
-    let tx = channel.tx.clone();
+    let app_state = AppState::new();
 
-    let worker_handles: Vec<_> = (0..15)
-        .map(|worker_id| {
-            let channel = Arc::clone(&channel);
-            thread::spawn(move || {
-                println!("Worker {} started", worker_id);
-                channel.start_worker(worker_id, RoutineType::Standard);
-            })
-        })
-        .collect();
+    let worker_handles = app_state.start_workers();
+    let consumer_handle = app_state.start_kafka_consumer();
+    // let server_handle = app_state.start_http_server();
 
-    let mut kafka_consumer = KafkaConsumer::new();
-    let tx_clone = tx.clone();
-    let consumer_handle = thread::spawn(move || {
-        kafka_consumer.poll(&tx_clone);
-    });
     for handle in worker_handles {
         handle.join().unwrap();
     }
     consumer_handle.join().unwrap();
+    // server_handle.join().unwrap();
 }
