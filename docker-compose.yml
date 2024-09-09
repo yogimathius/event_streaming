@@ -15,50 +15,55 @@ services:
       KAFKA_TOPICS: "brawl,not_on_list,accident"
       KAFKA_GROUP: "security"
       TEAM_ID: "1"
+      ROUTINE: "Standard"
     networks:
       - marry_me_kafka
 
   cleanup-consumer:
     build:
-      context: ./go-consumer
+      context: ./rust-consumer
     environment:
       KAFKA_BROKER: "kafka:29092"
       KAFKA_TOPICS: "dirty_table,broken_items"
-      TEAM: "cleanup"
+      KAFKA_GROUP: "cleanup"
       TEAM_ID: "2"
+      ROUTINE: "Intermittent"
     networks:
       - marry_me_kafka
 
   catering-consumer:
     build:
-      context: ./go-consumer
+      context: ./rust-consumer
     environment:
       KAFKA_BROKER: "kafka:29092"
       KAFKA_TOPICS: "bad_food,music,feeling_ill"
-      TEAM: "catering"
+      KAFKA_GROUP: "catering"
       TEAM_ID: "3"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
   officiant-consumer:
     build:
-      context: ./go-consumer
+      context: ./rust-consumer
     environment:
       KAFKA_BROKER: "kafka:29092"
       KAFKA_TOPICS: "bride,groom"
-      TEAM: "officiant"
+      KAFKA_GROUP: "officiant"
       TEAM_ID: "4"
+      ROUTINE: "Concentrated"
     networks:
       - marry_me_kafka
 
   waiters-consumer:
     build:
-      context: ./go-consumer
+      context: ./rust-consumer
     environment:
       KAFKA_BROKER: "kafka:29092"
       KAFKA_TOPICS: "broken_items,accident,feeling_ill"
-      TEAM: "waiters"
+      KAFKA_GROUP: "waiters"
       TEAM_ID: "5"
+      ROUTINE: "Standard"
     networks:
       - marry_me_kafka
 
