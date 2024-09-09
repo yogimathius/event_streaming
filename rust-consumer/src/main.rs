@@ -9,7 +9,7 @@ fn main() {
     let channel = Arc::new(Channel::new());
     let tx = channel.tx.clone();
 
-    let worker_handles: Vec<_> = (0..8)
+    let worker_handles: Vec<_> = (0..15)
         .map(|worker_id| {
             let channel = Arc::clone(&channel);
             thread::spawn(move || {

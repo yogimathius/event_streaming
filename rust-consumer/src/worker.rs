@@ -87,7 +87,7 @@ impl Channel {
         let handle = builder
             .spawn(move || {
                 // Introduce a random initial delay to stagger the schedules
-                let initial_delay = rand::thread_rng().gen_range(0..10);
+                let initial_delay = 4;
                 println!(
                     "Worker {} initial delay: {} seconds",
                     worker_id, initial_delay
@@ -95,10 +95,10 @@ impl Channel {
                 thread::sleep(Duration::from_secs(initial_delay));
 
                 loop {
-                    println!("Worker {} is working", worker_id);
+                    println!("Worker {} is BUSY WORKING", worker_id);
                     thread::sleep(routine_type.working_duration());
 
-                    println!("Worker {} is idle", worker_id);
+                    println!("Worker {} is READY FOR JOBS", worker_id);
                     let idle_duration = routine_type.idle_duration();
                     let start_idle = std::time::Instant::now();
 
@@ -151,7 +151,7 @@ fn process_job(
 
     producer.send(job.clone());
     println!(
-        "✅✅✅✅✅ Worker {} completing job: {:?} ✅✅✅✅✅",
+        "✅✅✅✅✅ Worker {} COMPLETING JOB {:?} FOR 3 SECONDS ✅✅✅✅✅",
         worker_id, job
     );
 
