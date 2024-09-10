@@ -2,7 +2,6 @@ use crate::{event::Event, priority::Priority, producer::KafkaProducer, transmitt
 use dotenv::dotenv;
 use kafka::consumer::{Consumer, FetchOffset, GroupOffsetStorage};
 use std::env;
-// use uuid::Uuid;
 
 pub struct KafkaConsumer {
     consumer: Consumer,

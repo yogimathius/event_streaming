@@ -4,6 +4,5 @@ pub mod event;
 pub mod priority;
 pub mod producer;
 pub mod receiver;
-pub mod server;
 pub mod transmitter;
 pub mod worker;

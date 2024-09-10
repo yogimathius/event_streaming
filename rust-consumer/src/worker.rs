@@ -81,12 +81,10 @@ impl Channel {
     ) -> thread::JoinHandle<()> {
         let rx = self.rx.clone();
         let builder = thread::Builder::new();
-        let producer: Arc<Mutex<KafkaProducer>> = Arc::clone(&self.producer);
         let pool = self.pool.clone();
 
         let handle = builder
             .spawn(move || {
-                // Introduce a random initial delay to stagger the schedules
                 let initial_delay = 4;
                 println!(
                     "Worker {} initial delay: {} seconds",
@@ -104,7 +102,7 @@ impl Channel {
 
                     while start_idle.elapsed() < idle_duration {
                         if let Some(mut job) = rx.try_recv() {
-                            process_job(&pool, worker_id, &mut job, producer.clone());
+                            process_job(&pool, worker_id, &mut job);
                         } else {
                             // Sleep for a short duration to avoid busy-waiting
                             thread::sleep(Duration::from_millis(100));
@@ -118,12 +116,7 @@ impl Channel {
     }
 }
 
-fn process_job(
-    pool: &Pool<PostgresConnectionManager<NoTls>>,
-    worker_id: usize,
-    job: &mut Event,
-    producer: Arc<Mutex<KafkaProducer>>,
-) {
+fn process_job(pool: &Pool<PostgresConnectionManager<NoTls>>, worker_id: usize, job: &mut Event) {
     let mut client = pool
         .get()
         .expect("Failed to get a connection from the pool");
@@ -145,18 +138,15 @@ fn process_job(
         return;
     }
 
-    job.status = format!("picked up by worker {}", worker_id);
+    job.status = format!("completed by worker {}", worker_id);
     job.event_time = Utc::now().to_rfc3339();
-    let mut producer = producer.lock().expect("Failed to lock producer");
 
-    producer.send(job.clone());
     println!(
         "✅✅✅✅✅ Worker {} COMPLETING JOB {:?} FOR 3 SECONDS ✅✅✅✅✅",
         worker_id, job
     );
 
     add_event_message(&mut client, 1, job).expect("Failed to add event message");
-    thread::sleep(Duration::from_secs(3));
 }
 
 fn add_event_message(
@@ -175,5 +165,7 @@ fn add_event_message(
             &message.status,
         ],
     )?;
+    thread::sleep(Duration::from_secs(3));
+
     Ok(())
 }
