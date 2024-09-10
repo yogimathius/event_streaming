@@ -1,5 +1,6 @@
 use crate::{
-    event::Event, models::priority::Priority, producer::KafkaProducer, transmitter::Transmitter,
+    channel::transmitter::Transmitter, event::Event, models::priority::Priority,
+    producer::KafkaProducer,
 };
 use dotenv::dotenv;
 use kafka::consumer::{Consumer, FetchOffset, GroupOffsetStorage};

@@ -10,8 +10,10 @@ use std::{
 };
 
 use crate::{
-    event::Event, models::routine_type::RoutineType, producer::KafkaProducer, receiver::Receiver,
-    transmitter::Transmitter,
+    channel::{receiver::Receiver, transmitter::Transmitter},
+    event::Event,
+    models::routine_type::RoutineType,
+    producer::KafkaProducer,
 };
 
 pub struct Channel {
