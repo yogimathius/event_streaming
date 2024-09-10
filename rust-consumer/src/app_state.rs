@@ -1,4 +1,4 @@
-use crate::{consumer::KafkaConsumer, models::routine_type::RoutineType, worker::Channel};
+use crate::{kafka::consumer::KafkaConsumer, models::routine_type::RoutineType, worker::Channel};
 use std::{env, sync::Arc, thread};
 
 pub struct AppState {

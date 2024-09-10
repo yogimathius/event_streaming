@@ -1,10 +1,9 @@
-use crate::{
-    channel::transmitter::Transmitter, event::Event, models::priority::Priority,
-    producer::KafkaProducer,
-};
+use crate::{channel::transmitter::Transmitter, event::Event, models::priority::Priority};
 use dotenv::dotenv;
 use kafka::consumer::{Consumer, FetchOffset, GroupOffsetStorage};
 use std::env;
+
+use super::producer::KafkaProducer;
 
 pub struct KafkaConsumer {
     consumer: Consumer,
