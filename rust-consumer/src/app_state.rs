@@ -33,17 +33,18 @@ impl AppState {
         let low_priority_channel = Arc::clone(&self.low_priority_channel);
 
         let high_handle = thread::spawn(move || {
-            high_priority_channel.start_workers("High", routine_type.clone())
+            high_priority_channel.start_workers("High", routine_type.clone(), 6)
         });
         handles.push(high_handle);
 
         let medium_handle = thread::spawn(move || {
-            medium_priority_channel.start_workers("Medium", routine_type.clone())
+            medium_priority_channel.start_workers("Medium", routine_type.clone(), 4)
         });
         handles.push(medium_handle);
 
-        let low_handle =
-            thread::spawn(move || low_priority_channel.start_workers("Low", routine_type.clone()));
+        let low_handle = thread::spawn(move || {
+            low_priority_channel.start_workers("Low", routine_type.clone(), 4)
+        });
         handles.push(low_handle);
 
         let mut all_handles = Vec::new();

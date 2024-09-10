@@ -19,6 +19,14 @@ impl RoutineType {
         }
     }
 
+    pub fn staggered_duration(&self) -> Duration {
+        match self {
+            RoutineType::Standard => Duration::from_secs(5),
+            RoutineType::Intermittent => Duration::from_secs(1),
+            RoutineType::Concentrated => Duration::from_secs(10),
+        }
+    }
+
     pub fn working_duration(&self) -> Duration {
         match self {
             RoutineType::Standard => Duration::from_secs(10),

@@ -47,13 +47,14 @@ impl Channel {
         &self,
         priority: &str,
         routine_type: RoutineType,
+        amount: usize,
     ) -> Vec<thread::JoinHandle<()>> {
-        (0..3)
+        (0..amount)
             .map(|worker_id| {
                 let rx = self.rx.clone();
                 let pool = self.pool.clone();
                 let priority = priority.to_string();
-                let initial_delay = 4;
+                let initial_delay = routine_type.staggered_duration().as_secs();
                 println!(
                     "{} priority worker {} started with initial delay: {} seconds",
                     priority, worker_id, initial_delay
@@ -65,7 +66,7 @@ impl Channel {
                     let idle_duration = routine_type.idle_duration();
                     loop {
                         println!(
-                            "📍📍📍📍{} Worker {} is BUSY WORKING for {:?} seconds📍📍📍📍",
+                            "💀💀💀💀{} Worker {} is BUSY WORKING for {:?} seconds💀💀💀💀",
                             priority, worker_id, working_duration
                         );
                         thread::sleep(working_duration);
