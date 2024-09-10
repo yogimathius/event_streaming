@@ -20,35 +20,42 @@ impl AppState {
         }
     }
 
-    pub fn start_workers(&self) -> Vec<thread::JoinHandle<()>> {
-        let mut handles = Vec::new();
+    fn start_priority_workers(
+        &self,
+        channel: Arc<Channel>,
+        priority: String,
+    ) -> Vec<thread::JoinHandle<()>> {
         let routine_env = env::var("ROUTINE").expect("ROUTINE must be set");
 
         let routine_type = RoutineType::new(&routine_env);
+        (0..3)
+            .map(|worker_id| {
+                let channel = Arc::clone(&channel);
+                let priority = priority.clone();
+                thread::spawn(move || {
+                    println!("{} priority worker {} started", priority, worker_id);
+                    channel.start_worker(worker_id, routine_type);
+                })
+            })
+            .collect()
+    }
 
-        for worker_id in 0..3 {
-            let channel = Arc::clone(&self.high_priority_channel);
-            handles.push(thread::spawn(move || {
-                println!("High priority worker {} started", worker_id);
-                channel.start_worker(worker_id, routine_type);
-            }));
-        }
+    pub fn start_workers(&self) -> Vec<thread::JoinHandle<()>> {
+        let mut handles = Vec::new();
 
-        for worker_id in 0..3 {
-            let channel = Arc::clone(&self.medium_priority_channel);
-            handles.push(thread::spawn(move || {
-                println!("Medium priority worker {} started", worker_id);
-                channel.start_worker(worker_id, routine_type);
-            }));
-        }
-
-        for worker_id in 0..3 {
-            let channel = Arc::clone(&self.low_priority_channel);
-            handles.push(thread::spawn(move || {
-                println!("Low priority worker {} started", worker_id);
-                channel.start_worker(worker_id, routine_type);
-            }));
-        }
+        handles.extend(
+            self.start_priority_workers(
+                Arc::clone(&self.high_priority_channel),
+                "High".to_string(),
+            ),
+        );
+        handles.extend(self.start_priority_workers(
+            Arc::clone(&self.medium_priority_channel),
+            "Medium".to_string(),
+        ));
+        handles.extend(
+            self.start_priority_workers(Arc::clone(&self.low_priority_channel), "Low".to_string()),
+        );
 
         handles
     }
