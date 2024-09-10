@@ -85,8 +85,16 @@ def send_event(event):
 start_time = time.time()
 
 if filePath:
-   for event in events:
-      print(f"Event loaded: {event}")
+  for event in events:
+      print(f"Sending event: {event}")
+      event_seconds = int(event['timestamp'].split(":")[0]) * 60 + int(event['timestamp'].split(":")[1])
+      print(f"Event time: {event_seconds} seconds")
+      current_seconds = time.time() - start_time
+      print(f"Current time: {current_seconds} seconds")
+      while current_seconds < event_seconds:
+          time.sleep(0.1)  # Reduced sleep interval
+          current_seconds = time.time() - start_time
+
       send_event(event)
 else:
   while time.time() - start_time < simulation_duration:

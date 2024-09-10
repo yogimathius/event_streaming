@@ -43,45 +43,50 @@ impl Channel {
         }
     }
 
-    pub fn start_worker(
+    pub fn start_workers(
         &self,
-        worker_id: usize,
+        priority: &str,
         routine_type: RoutineType,
-    ) -> thread::JoinHandle<()> {
-        let rx = self.rx.clone();
-        let builder = thread::Builder::new();
-        let pool = self.pool.clone();
-
-        let handle = builder
-            .spawn(move || {
+    ) -> Vec<thread::JoinHandle<()>> {
+        (0..3)
+            .map(|worker_id| {
+                let rx = self.rx.clone();
+                let pool = self.pool.clone();
+                let priority = priority.to_string();
                 let initial_delay = 4;
                 println!(
-                    "Worker {} initial delay: {} seconds",
-                    worker_id, initial_delay
+                    "{} priority worker {} started with initial delay: {} seconds",
+                    priority, worker_id, initial_delay
                 );
                 thread::sleep(Duration::from_secs(initial_delay));
 
-                loop {
-                    println!("Worker {} is BUSY WORKING", worker_id);
-                    thread::sleep(routine_type.working_duration());
-
-                    println!("Worker {} is READY FOR JOBS", worker_id);
+                thread::spawn(move || {
+                    let working_duration = routine_type.working_duration();
                     let idle_duration = routine_type.idle_duration();
-                    let start_idle = std::time::Instant::now();
+                    loop {
+                        println!(
+                            "📍📍📍📍{} Worker {} is BUSY WORKING for {:?} seconds📍📍📍📍",
+                            priority, worker_id, working_duration
+                        );
+                        thread::sleep(working_duration);
 
-                    while start_idle.elapsed() < idle_duration {
-                        if let Some(mut job) = rx.try_recv() {
-                            process_job(&pool, worker_id, &mut job);
-                        } else {
-                            // Sleep for a short duration to avoid busy-waiting
-                            thread::sleep(Duration::from_millis(100));
+                        println!(
+                            "🔥🔥🔥🔥{} Worker {} is READY FOR JOBS for {:?} seconds🔥🔥🔥🔥",
+                            priority, worker_id, idle_duration
+                        );
+                        let start_idle = std::time::Instant::now();
+
+                        while start_idle.elapsed() < idle_duration {
+                            if let Some(mut job) = rx.try_recv() {
+                                process_job(&pool, worker_id, &mut job);
+                            } else {
+                                thread::sleep(Duration::from_millis(100));
+                            }
                         }
                     }
-                }
+                })
             })
-            .expect("Failed to spawn thread");
-
-        handle
+            .collect()
     }
 }
 
@@ -103,7 +108,7 @@ fn process_job(pool: &Pool<PostgresConnectionManager<NoTls>>, worker_id: usize, 
             worker_id, job
         );
         job.status = format!("message unresolved");
-        add_event_message(&mut client, 1, job).expect("Failed to add event message");
+        add_event_message(&mut client, job).expect("Failed to add event message");
         return;
     }
 
@@ -115,19 +120,18 @@ fn process_job(pool: &Pool<PostgresConnectionManager<NoTls>>, worker_id: usize, 
         worker_id, job
     );
 
-    add_event_message(&mut client, 1, job).expect("Failed to add event message");
+    add_event_message(&mut client, job).expect("Failed to add event message");
 }
 
 fn add_event_message(
     client: &mut PooledConnection<PostgresConnectionManager<NoTls>>,
-    event_id: i32,
     message: &Event,
 ) -> Result<(), postgres::Error> {
     let query = "INSERT INTO event_messages (event_id, event_type, priority, description, status) VALUES ($1, $2, $3, $4, $5)";
     client.execute(
         query,
         &[
-            &event_id,
+            &message.event_id,
             &message.event_type,
             &message.priority.as_str(),
             &message.description,

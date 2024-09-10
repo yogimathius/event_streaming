@@ -22,44 +22,37 @@ impl AppState {
         }
     }
 
-    fn start_priority_workers(
-        &self,
-        channel: Arc<Channel>,
-        priority: String,
-    ) -> Vec<thread::JoinHandle<()>> {
-        let routine_env = env::var("ROUTINE").expect("ROUTINE must be set");
-
-        let routine_type = RoutineType::new(&routine_env);
-        (0..3)
-            .map(|worker_id| {
-                let channel = Arc::clone(&channel);
-                let priority = priority.clone();
-                thread::spawn(move || {
-                    println!("{} priority worker {} started", priority, worker_id);
-                    channel.start_worker(worker_id, routine_type);
-                })
-            })
-            .collect()
-    }
-
     pub fn start_workers(&self) -> Vec<thread::JoinHandle<()>> {
+        let routine_env = env::var("ROUTINE").expect("ROUTINE must be set");
+        let routine_type = RoutineType::new(&routine_env);
+
         let mut handles = Vec::new();
 
-        handles.extend(
-            self.start_priority_workers(
-                Arc::clone(&self.high_priority_channel),
-                "High".to_string(),
-            ),
-        );
-        handles.extend(self.start_priority_workers(
-            Arc::clone(&self.medium_priority_channel),
-            "Medium".to_string(),
-        ));
-        handles.extend(
-            self.start_priority_workers(Arc::clone(&self.low_priority_channel), "Low".to_string()),
-        );
+        let high_priority_channel = Arc::clone(&self.high_priority_channel);
+        let medium_priority_channel = Arc::clone(&self.medium_priority_channel);
+        let low_priority_channel = Arc::clone(&self.low_priority_channel);
 
-        handles
+        let high_handle = thread::spawn(move || {
+            high_priority_channel.start_workers("High", routine_type.clone())
+        });
+        handles.push(high_handle);
+
+        let medium_handle = thread::spawn(move || {
+            medium_priority_channel.start_workers("Medium", routine_type.clone())
+        });
+        handles.push(medium_handle);
+
+        let low_handle =
+            thread::spawn(move || low_priority_channel.start_workers("Low", routine_type.clone()));
+        handles.push(low_handle);
+
+        let mut all_handles = Vec::new();
+        for handle in handles {
+            let worker_handles = handle.join().expect("Failed to join worker thread");
+            all_handles.extend(worker_handles);
+        }
+
+        all_handles
     }
 
     pub fn start_kafka_consumer(&self) -> thread::JoinHandle<()> {

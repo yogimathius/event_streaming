@@ -12,9 +12,9 @@ pub enum RoutineType {
 impl RoutineType {
     pub fn new(routine_type: &str) -> Self {
         match routine_type {
-            "standard" => RoutineType::Standard,
-            "intermittent" => RoutineType::Intermittent,
-            "concentrated" => RoutineType::Concentrated,
+            "Standard" => RoutineType::Standard,
+            "Intermittent" => RoutineType::Intermittent,
+            "Concentrated" => RoutineType::Concentrated,
             _ => panic!("Invalid routine type"),
         }
     }
