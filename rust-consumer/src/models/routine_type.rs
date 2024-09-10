@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use crate::priority::Priority;
+use super::priority::Priority;
 
 #[derive(Debug, Copy, Clone)]
 pub enum RoutineType {

@@ -1,4 +1,6 @@
-use crate::{event::Event, priority::Priority, producer::KafkaProducer, transmitter::Transmitter};
+use crate::{
+    event::Event, models::priority::Priority, producer::KafkaProducer, transmitter::Transmitter,
+};
 use dotenv::dotenv;
 use kafka::consumer::{Consumer, FetchOffset, GroupOffsetStorage};
 use std::env;
@@ -34,7 +36,7 @@ impl KafkaConsumer {
         KafkaConsumer { consumer, producer }
     }
 
-    pub fn poll(&mut self, tx: &Transmitter) {
+    pub fn poll(&mut self, high_tx: &Transmitter, medium_tx: &Transmitter, low_tx: &Transmitter) {
         loop {
             for ms in self.consumer.poll().unwrap().iter() {
                 for m in ms.messages() {
@@ -45,7 +47,7 @@ impl KafkaConsumer {
                                 event.status = "message consumed".to_owned();
                                 event.event_time = chrono::Utc::now().to_rfc3339();
                                 self.producer.send(event.clone());
-                                self.process_event(event, tx);
+                                self.process_event(event, high_tx, medium_tx, low_tx);
                             }
                         }
                         Err(e) => {
@@ -65,11 +67,17 @@ impl KafkaConsumer {
         }
     }
 
-    fn process_event(&mut self, event: Event, tx: &Transmitter) {
+    fn process_event(
+        &mut self,
+        event: Event,
+        high_tx: &Transmitter,
+        medium_tx: &Transmitter,
+        low_tx: &Transmitter,
+    ) {
         match event.priority {
-            Priority::High => self.delegate_to_high_worker(event.clone(), tx),
-            Priority::Medium => self.delegate_to_med_worker(event.clone(), tx),
-            Priority::Low => self.delegate_to_low_worker(event.clone(), tx),
+            Priority::High => self.delegate_to_high_worker(event.clone(), high_tx),
+            Priority::Medium => self.delegate_to_med_worker(event.clone(), medium_tx),
+            Priority::Low => self.delegate_to_low_worker(event.clone(), low_tx),
         }
     }
 

@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::priority::Priority;
+use crate::models::priority::Priority;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Event {
