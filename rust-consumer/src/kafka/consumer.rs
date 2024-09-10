@@ -1,4 +1,4 @@
-use crate::{channel::transmitter::Transmitter, event::Event, models::priority::Priority};
+use crate::{channel::transmitter::Transmitter, models::event::Event, models::priority::Priority};
 use dotenv::dotenv;
 use kafka::consumer::{Consumer, FetchOffset, GroupOffsetStorage};
 use std::env;

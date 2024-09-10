@@ -1,6 +1,6 @@
 use crossbeam_channel::Receiver as CrossbeamReceiver;
 
-use crate::event::Event;
+use crate::models::event::Event;
 
 pub struct Receiver {
     pub receiver: CrossbeamReceiver<Event>,

@@ -11,8 +11,8 @@ use std::{
 
 use crate::{
     channel::{receiver::Receiver, transmitter::Transmitter},
-    event::Event,
     kafka::producer::KafkaProducer,
+    models::event::Event,
     models::routine_type::RoutineType,
 };
 
