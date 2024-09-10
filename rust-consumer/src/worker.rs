@@ -10,42 +10,9 @@ use std::{
 };
 
 use crate::{
-    event::Event, priority::Priority, producer::KafkaProducer, receiver::Receiver,
+    event::Event, models::routine_type::RoutineType, producer::KafkaProducer, receiver::Receiver,
     transmitter::Transmitter,
 };
-
-#[derive(Debug, Copy, Clone)]
-pub enum RoutineType {
-    Standard,
-    Intermittent,
-    Concentrated,
-}
-
-impl RoutineType {
-    pub fn working_duration(&self) -> Duration {
-        match self {
-            RoutineType::Standard => Duration::from_secs(10),
-            RoutineType::Intermittent => Duration::from_secs(5),
-            RoutineType::Concentrated => Duration::from_secs(60),
-        }
-    }
-
-    pub fn idle_duration(&self) -> Duration {
-        match self {
-            RoutineType::Standard => Duration::from_secs(5),
-            RoutineType::Intermittent => Duration::from_secs(10),
-            RoutineType::Concentrated => Duration::from_secs(60),
-        }
-    }
-
-    pub fn time_to_complete(priority: Priority) -> u64 {
-        match priority {
-            Priority::High => 5,
-            Priority::Medium => 10,
-            Priority::Low => 15,
-        }
-    }
-}
 
 pub struct Channel {
     pub tx: Transmitter,

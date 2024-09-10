@@ -1,6 +1,7 @@
 pub mod app_state;
 pub mod consumer;
 pub mod event;
+pub mod models;
 pub mod priority;
 pub mod producer;
 pub mod receiver;
