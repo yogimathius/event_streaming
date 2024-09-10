@@ -9,18 +9,33 @@ Follow these steps to set up and run the project:
 1. **Make the script executable:**
 
    ```bash
-   chmod +x create-topics.sh
+   chmod +x scripts/create-topics.sh
    ```
 
 2. **Start Kafka and Zookeeper services:**
 
    ```bash
-   docker compose -f docker-compose-kafka.yml up -d
+   docker compose -f docker-compose-services.yml up -d
    ```
 
 3. **Build and start the application containers:**
+
    ```bash
    docker compose up --build
+   ```
+
+4. **Run python simulator**:
+
+   To run the simulator with a randomized set of events, execute the following command:
+
+   ```bash
+   python3 simluator/simulator.py
+   ```
+
+   To run the simulator with Gabriel's datasets, execute the following command:
+
+   ```bash
+   python3 simluator/simulator.py assets/dataset_1.json # or 2,3,4,5
    ```
 
 #### Project Structure
@@ -29,17 +44,17 @@ Follow these steps to set up and run the project:
 - **Zookeeper:** Coordinates and manages Kafka brokers.
 - **Kafka Manager:** (Optional) Provides a user interface to manage Kafka.
 - **Go Server (API):** Receives POST requests and produces events to Kafka topics.
-- **Scalable Consumers:** Multiple consumers, one for each team, consuming specific topics from Kafka.
+- **Scalable Rust Consumers:** Multiple consumers, one for each team, consuming specific topics from Kafka.
 
 #### Topics and Teams
 
 The Kafka topics are created based on different teams handling various events:
 
 - **Security:** `brawl`, `not-on-list`, `person-fell`, `injured-kid`
-- **Clean-up:** `dirty-table`, `broken-glass-clean-up`
-- **Catering:** `bad-food`, `music-too-loud`, `music-too-low`, `feeling-ill-catering`
+- **Clean-up:** `dirty-table`, `broken-glass`
+- **Catering:** `bad-food`, `music-too-loud`, `music-too-low`, `feeling-ill`
 - **Officiant:** `missing-rings`, `missing-bride`, `missing-groom`
-- **Waiters:** `broken-glass-waiters`, `feeling-ill-waiters`
+- **Waiters:** `broken-glass`, `feeling-ill`
 
 #### Simulation
 
@@ -55,16 +70,8 @@ Teams handle events based on their specified routines:
 - **Intermittent:** 5 seconds working, 5 seconds idle
 - **Concentrated:** 60 seconds working, 60 seconds idle
 
-#### Additional Setup
+#### Troubleshooting
 
-Ensure you have the necessary dependencies installed and your environment is properly configured before running the project. If using a Python script for simulation, generate the `requirements.txt` file with:
-
-```bash
-pip freeze > requirements.txt
-```
-
-To install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
+- Kafka tends to to boot up successfully on the first go, so you may need to restart the services.
+- If the Go server fails to start, check the logs for any errors.
+- If the Rust consumers fail to start, ensure the Kafka topics are created and the server is running.
