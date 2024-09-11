@@ -2,6 +2,16 @@
 
 This project simulates a wedding event where various teams handle different types of events. The simulation aims to process these events efficiently within specified time frames to maintain guest satisfaction.
 
+#### Tech Stack
+
+- **Python Event Simulator**: Makes POST requests to the Go server.
+- **Go Gin Server**: Receives requests and produces Kafka topics.
+- **Kafka**: Manages event messaging between the producer (API) and consumers (teams).
+- **Rust Consumer/Worker**: Handles topics and inserts results into the Postgres database.
+- **Postgres DB**: Stores event statuses.
+- **Zookeeper**: Coordinates and manages Kafka brokers.
+- **Kafka Manager**: (Optional) Provides a user interface to manage Kafka.
+
 #### Getting Started
 
 Follow these steps to set up and run the project:
