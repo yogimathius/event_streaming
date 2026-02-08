@@ -1,87 +1,50 @@
-### Wedding Event Simulation Project
+# Event Streaming (Wedding Simulation)
 
-This project simulates a wedding event where various teams handle different types of events. The simulation aims to process these events efficiently within specified time frames to maintain guest satisfaction.
+Distributed event-streaming simulation using Go, Kafka, Rust workers, and a Python event generator.
 
-#### Tech Stack
+## Purpose
+- Model a high-volume event-processing pipeline with multiple worker teams and priority levels.
+- Validate topic-based routing and asynchronous processing behavior in a realistic simulation scenario.
 
-- **Python Event Simulator**: Makes POST requests to the Go server.
-- **Go Gin Server**: Receives requests and produces Kafka topics.
-- **Kafka**: Manages event messaging between the producer (API) and consumers (teams).
-- **Rust Consumer/Worker**: Handles topics and inserts results into the Postgres database.
-- **Postgres DB**: Stores event statuses.
-- **Zookeeper**: Coordinates and manages Kafka brokers.
-- **Kafka Manager**: (Optional) Provides a user interface to manage Kafka.
+## Current Implementation
+- Go producer/API (`go-server/`) accepts events and publishes to Kafka.
+- Rust consumer workers (`rust-consumer/`) process messages by topic.
+- Python simulator (`simulator/simulator.py`) generates randomized or dataset-driven events.
+- Infrastructure orchestration via Docker Compose (`docker-compose-services.yml`, `docker-compose.yml`).
 
-#### Getting Started
+## Interfaces
+- HTTP endpoint exposed by Go service:
+- `POST /message` (default local target in simulator: `http://localhost:8080/message`)
+- Kafka topics created by `scripts/create-topics.sh`:
+- `event_created`
+- `brawl`
+- `not_on_list`
+- `accident`
+- `dirty_table`
+- `broken_items`
+- `bad_food`
+- `music`
+- `feeling_ill`
+- `bride`
+- `groom`
 
-Follow these steps to set up and run the project:
+## Running Locally
+1. Create topics script executable:
+- `chmod +x scripts/create-topics.sh`
+2. Start Kafka/Zookeeper stack:
+- `docker compose -f docker-compose-services.yml up -d`
+3. Start application services:
+- `docker compose up --build`
+4. Run simulator:
+- `python3 simulator/simulator.py`
+or with dataset:
+- `python3 simulator/simulator.py assets/dataset_1.json`
 
-1. **Make the script executable:**
+## Current Status
+- Functional simulation pipeline with producer, broker, and consumers is present.
+- This repository is a scenario-driven event-streaming demo, not a general-purpose production platform.
 
-   ```bash
-   chmod +x scripts/create-topics.sh
-   ```
-
-2. **Start Kafka and Zookeeper services:**
-
-   ```bash
-   docker compose -f docker-compose-services.yml up -d
-   ```
-
-3. **Build and start the application containers:**
-
-   ```bash
-   docker compose up --build
-   ```
-
-4. **Run python simulator**:
-
-   To run the simulator with a randomized set of events, execute the following command:
-
-   ```bash
-   python3 simluator/simulator.py
-   ```
-
-   To run the simulator with Gabriel's datasets, execute the following command:
-
-   ```bash
-   python3 simluator/simulator.py assets/dataset_1.json # or 2,3,4,5
-   ```
-
-#### Project Structure
-
-- **Kafka:** Manages event messaging between the producer (API) and consumers (teams).
-- **Zookeeper:** Coordinates and manages Kafka brokers.
-- **Kafka Manager:** (Optional) Provides a user interface to manage Kafka.
-- **Go Server (API):** Receives POST requests and produces events to Kafka topics.
-- **Scalable Rust Consumers:** Multiple consumers, one for each team, consuming specific topics from Kafka.
-
-#### Topics and Teams
-
-The Kafka topics are created based on different teams handling various events:
-
-- **Security:** `brawl`, `not-on-list`, `person-fell`, `injured-kid`
-- **Clean-up:** `dirty-table`, `broken-glass`
-- **Catering:** `bad-food`, `music-too-loud`, `music-too-low`, `feeling-ill`
-- **Officiant:** `missing-rings`, `missing-bride`, `missing-groom`
-- **Waiters:** `broken-glass`, `feeling-ill`
-
-#### Simulation
-
-The simulation runs for 6 minutes, during which events are generated and processed. Each event has a type and priority, which determines the processing time frame:
-
-- **High Priority:** 5 seconds
-- **Medium Priority:** 10 seconds
-- **Low Priority:** 15 seconds
-
-Teams handle events based on their specified routines:
-
-- **Standard:** 20 seconds working, 5 seconds idle
-- **Intermittent:** 5 seconds working, 5 seconds idle
-- **Concentrated:** 60 seconds working, 60 seconds idle
-
-#### Troubleshooting
-
-- Kafka tends to to boot up successfully on the first go, so you may need to restart the services.
-- If the Go server fails to start, check the logs for any errors.
-- If the Rust consumers fail to start, ensure the Kafka topics are created and the server is running.
+## Next Steps
+- Add automated integration checks for end-to-end message flow.
+- Add runbooks for failure modes (broker restart, consumer lag, malformed payloads).
+- Remove/ignore local env files and document required variables in `.env.example`.
